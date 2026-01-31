@@ -32,11 +32,22 @@ export function calculateInvoiceTotals(
 
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
-    draft: 'bg-gray-100 text-gray-800',
-    sent: 'bg-blue-100 text-blue-800',
-    partial: 'bg-yellow-100 text-yellow-800',
-    paid: 'bg-green-100 text-green-800',
-    overdue: 'bg-red-100 text-red-800',
+    draft: 'bg-stone-100 text-stone-600',
+    sent: 'bg-accent-50 text-accent-700',
+    partial: 'bg-amber-50 text-amber-800',
+    paid: 'bg-emerald-50 text-emerald-700',
+    overdue: 'bg-red-50 text-red-700',
   };
-  return colors[status] || 'bg-gray-100 text-gray-800';
+  return colors[status] || 'bg-stone-100 text-stone-600';
+}
+
+export function getStatusDot(status: string): string {
+  const dots: Record<string, string> = {
+    draft: 'bg-stone-400',
+    sent: 'bg-accent-500',
+    partial: 'bg-amber-500',
+    paid: 'bg-emerald-500',
+    overdue: 'bg-red-500',
+  };
+  return dots[status] || 'bg-stone-400';
 }

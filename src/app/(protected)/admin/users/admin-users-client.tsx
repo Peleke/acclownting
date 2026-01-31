@@ -56,7 +56,11 @@ export function AdminUsersClient() {
       <Button onClick={() => setShowModal(true)}>Invite User</Button>
       <Modal open={showModal} onClose={() => setShowModal(false)} title="Invite User">
         <form onSubmit={handleInvite} className="space-y-4">
-          {error && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</p>}
+          {error && (
+            <div className="text-sm text-red-700 bg-red-50 border border-red-100 px-3 py-2.5 rounded-lg">
+              {error}
+            </div>
+          )}
           <Input id="full_name" name="full_name" label="Full Name" required />
           <Input id="email" name="email" label="Email" type="email" required />
           <Select
@@ -69,7 +73,7 @@ export function AdminUsersClient() {
             ]}
             required
           />
-          <div className="flex gap-2 justify-end">
+          <div className="flex gap-2 justify-end pt-2">
             <Button type="submit" disabled={loading}>
               {loading ? 'Inviting...' : 'Send Invite'}
             </Button>

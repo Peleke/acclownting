@@ -25,44 +25,44 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{client.name}</h1>
-          <p className="text-gray-600">
-            {[client.email, client.phone].filter(Boolean).join(' | ') || 'No contact info'}
+          <h1 className="text-xl font-semibold text-stone-900 tracking-tight">{client.name}</h1>
+          <p className="text-sm text-stone-400 mt-0.5">
+            {[client.email, client.phone].filter(Boolean).join(' \u00b7 ') || 'No contact info'}
           </p>
-          {client.address && <p className="text-gray-600">{client.address}</p>}
+          {client.address && <p className="text-sm text-stone-400">{client.address}</p>}
         </div>
         <ClientDetailClient client={client} />
       </div>
 
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Invoices</h2>
-      <div className="bg-white rounded-lg shadow border overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
+      <h2 className="text-sm font-semibold text-stone-900 mb-3">Invoices</h2>
+      <div className="bg-white rounded-xl border border-stone-200/60 shadow-card overflow-x-auto">
+        <table className="min-w-full">
+          <thead>
+            <tr className="border-b border-stone-100">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold text-stone-400 uppercase tracking-wider">#</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Date</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Status</th>
+              <th className="px-5 py-3 text-right text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Total</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
-            {invoices?.map((inv) => (
-              <tr key={inv.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 text-sm">
-                  <Link href={`/invoices/${inv.id}`} className="text-blue-600 hover:underline">
+          <tbody>
+            {invoices?.map((inv, idx) => (
+              <tr key={inv.id} className={`hover:bg-stone-50/60 ${idx !== (invoices?.length ?? 0) - 1 ? 'border-b border-stone-100/80' : ''}`}>
+                <td className="px-5 py-3.5 text-sm">
+                  <Link href={`/invoices/${inv.id}`} className="text-stone-900 font-medium hover:text-accent-600">
                     #{inv.invoice_number}
                   </Link>
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-600">{formatDate(inv.created_at)}</td>
-                <td className="px-4 py-3 text-sm"><StatusBadge status={inv.status} /></td>
-                <td className="px-4 py-3 text-sm text-right">{formatCurrency(inv.total)}</td>
+                <td className="px-5 py-3.5 text-sm text-stone-500">{formatDate(inv.created_at)}</td>
+                <td className="px-5 py-3.5 text-sm"><StatusBadge status={inv.status} /></td>
+                <td className="px-5 py-3.5 text-sm text-right tabular-nums text-stone-700">{formatCurrency(inv.total)}</td>
               </tr>
             ))}
             {(!invoices || invoices.length === 0) && (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={4} className="px-5 py-12 text-center text-sm text-stone-400">
                   No invoices for this client yet.
                 </td>
               </tr>

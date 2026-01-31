@@ -43,19 +43,26 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-sm p-8 bg-white rounded-lg shadow">
-        <h1 className="text-2xl font-bold text-center mb-6">Acclownting</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</p>
-          )}
-          <Input id="email" name="email" label="Email" type="email" required />
-          <Input id="password" name="password" label="Password" type="password" required />
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
-          </Button>
-        </form>
+    <div className="min-h-screen flex items-center justify-center bg-stone-50/50">
+      <div className="w-full max-w-sm animate-slide-up">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-stone-900 tracking-tight">Acclownting</h1>
+          <p className="text-sm text-stone-400 mt-1">Sign in to your account</p>
+        </div>
+        <div className="bg-white rounded-2xl border border-stone-200/60 shadow-card p-8">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {error && (
+              <div className="text-sm text-red-700 bg-red-50 border border-red-100 px-3 py-2.5 rounded-lg">
+                {error}
+              </div>
+            )}
+            <Input id="email" name="email" label="Email" type="email" required />
+            <Input id="password" name="password" label="Password" type="password" required />
+            <Button type="submit" className="w-full" size="lg" disabled={loading}>
+              {loading ? 'Signing in...' : 'Sign In'}
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );

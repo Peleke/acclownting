@@ -7,8 +7,8 @@ export default async function NewInvoicePage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">New Invoice</h1>
-      <div className="bg-white rounded-lg shadow border p-6">
+      <h1 className="text-xl font-semibold text-stone-900 tracking-tight mb-6">New Invoice</h1>
+      <div className="bg-white rounded-xl border border-stone-200/60 shadow-card p-6 sm:p-8">
         <InvoiceForm clients={clients || []} />
       </div>
     </div>
