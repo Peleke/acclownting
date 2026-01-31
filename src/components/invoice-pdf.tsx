@@ -1,0 +1,133 @@
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import type { Invoice, Payment } from '@/lib/types';
+
+const styles = StyleSheet.create({
+  page: { padding: 40, fontSize: 10, fontFamily: 'Helvetica' },
+  header: { marginBottom: 30 },
+  title: { fontSize: 24, fontWeight: 'bold', color: '#1a1a1a' },
+  subtitle: { fontSize: 10, color: '#666', marginTop: 4 },
+  row: { flexDirection: 'row', justifyContent: 'space-between' },
+  section: { marginBottom: 20 },
+  sectionTitle: { fontSize: 12, fontWeight: 'bold', marginBottom: 8, color: '#333' },
+  tableHeader: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingBottom: 4,
+    marginBottom: 4,
+    fontWeight: 'bold',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    paddingVertical: 3,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#eee',
+  },
+  colDesc: { flex: 3 },
+  colQty: { flex: 1, textAlign: 'right' },
+  colPrice: { flex: 1, textAlign: 'right' },
+  colTotal: { flex: 1, textAlign: 'right' },
+  totals: { marginTop: 10, alignItems: 'flex-end' },
+  totalRow: { flexDirection: 'row', width: 200, justifyContent: 'space-between', paddingVertical: 2 },
+  grandTotal: { fontWeight: 'bold', fontSize: 12, borderTopWidth: 1, borderTopColor: '#333', paddingTop: 4 },
+  notes: { marginTop: 20, padding: 10, backgroundColor: '#f9f9f9', borderRadius: 4 },
+  payments: { marginTop: 20 },
+  paymentRow: { flexDirection: 'row', paddingVertical: 2 },
+  paymentCol: { flex: 1 },
+  footer: { position: 'absolute', bottom: 30, left: 40, right: 40, textAlign: 'center', color: '#999', fontSize: 8 },
+});
+
+function fmt(n: number) {
+  return `$${n.toFixed(2)}`;
+}
+
+interface InvoicePDFProps {
+  invoice: Invoice;
+  payments: Payment[];
+}
+
+export function InvoicePDF({ invoice, payments }: InvoicePDFProps) {
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.header}>
+          <Text style={styles.title}>INVOICE</Text>
+          <Text style={styles.subtitle}>#{invoice.invoice_number}</Text>
+        </View>
+
+        <View style={[styles.row, styles.section]}>
+          <View>
+            <Text style={styles.sectionTitle}>Bill To</Text>
+            <Text>{invoice.client?.name}</Text>
+            {invoice.client?.email && <Text>{invoice.client.email}</Text>}
+            {invoice.client?.address && <Text>{invoice.client.address}</Text>}
+          </View>
+          <View style={{ alignItems: 'flex-end' }}>
+            <Text>Date: {new Date(invoice.created_at).toLocaleDateString()}</Text>
+            {invoice.due_date && (
+              <Text>Due: {new Date(invoice.due_date).toLocaleDateString()}</Text>
+            )}
+            <Text>Status: {invoice.status.toUpperCase()}</Text>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.tableHeader}>
+            <Text style={styles.colDesc}>Description</Text>
+            <Text style={styles.colQty}>Qty</Text>
+            <Text style={styles.colPrice}>Price</Text>
+            <Text style={styles.colTotal}>Total</Text>
+          </View>
+          {invoice.line_items.map((item, i) => (
+            <View key={i} style={styles.tableRow}>
+              <Text style={styles.colDesc}>{item.description}</Text>
+              <Text style={styles.colQty}>{item.quantity}</Text>
+              <Text style={styles.colPrice}>{fmt(item.unit_price)}</Text>
+              <Text style={styles.colTotal}>{fmt(item.total)}</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.totals}>
+          <View style={styles.totalRow}>
+            <Text>Subtotal</Text>
+            <Text>{fmt(invoice.subtotal)}</Text>
+          </View>
+          <View style={styles.totalRow}>
+            <Text>Tax ({(invoice.tax_rate * 100).toFixed(2)}%)</Text>
+            <Text>{fmt(invoice.tax_amount)}</Text>
+          </View>
+          <View style={[styles.totalRow, styles.grandTotal]}>
+            <Text>Total</Text>
+            <Text>{fmt(invoice.total)}</Text>
+          </View>
+        </View>
+
+        {invoice.notes && (
+          <View style={styles.notes}>
+            <Text style={styles.sectionTitle}>Notes</Text>
+            <Text>{invoice.notes}</Text>
+          </View>
+        )}
+
+        {payments.length > 0 && (
+          <View style={styles.payments}>
+            <Text style={styles.sectionTitle}>Payment History</Text>
+            {payments.map((p, i) => (
+              <View key={i} style={styles.paymentRow}>
+                <Text style={styles.paymentCol}>
+                  {new Date(p.received_at).toLocaleDateString()}
+                </Text>
+                <Text style={styles.paymentCol}>{p.method}</Text>
+                <Text style={styles.paymentCol}>{fmt(p.amount)}</Text>
+                <Text style={styles.paymentCol}>{p.reference || '-'}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        <Text style={styles.footer}>Generated by Acclownting</Text>
+      </Page>
+    </Document>
+  );
+}
