@@ -60,16 +60,20 @@ describe('InvoiceForm', () => {
 
   it('adds a new line item row', () => {
     render(<InvoiceForm clients={clients} />);
-    const initialCount = screen.getAllByText('×').length;
-    fireEvent.click(screen.getByText('+ Add Line Item'));
-    expect(screen.getAllByText('×').length).toBe(initialCount + 1);
+    // Line item rows have remove buttons with SVGs
+    const initialRemoveCount = screen.getAllByRole('button').filter(b => b.querySelector('svg')).length;
+    fireEvent.click(screen.getByText('+ Add line item'));
+    const newRemoveCount = screen.getAllByRole('button').filter(b => b.querySelector('svg')).length;
+    expect(newRemoveCount).toBe(initialRemoveCount + 1);
   });
 
   it('shows totals section', () => {
     render(<InvoiceForm clients={clients} />);
-    expect(screen.getByText(/Subtotal:/)).toBeInTheDocument();
-    expect(screen.getByText(/Tax:/)).toBeInTheDocument();
-    expect(screen.getByText(/Total:/)).toBeInTheDocument();
+    expect(screen.getByText('Subtotal')).toBeInTheDocument();
+    // "Tax" appears in both "Tax Rate (%)" label and the totals section
+    expect(screen.getAllByText(/^Tax$/).length).toBeGreaterThanOrEqual(1);
+    // "Total" appears in column header and totals section
+    expect(screen.getAllByText(/^Total$/).length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders notes textarea', () => {
@@ -90,7 +94,8 @@ describe('InvoiceForm', () => {
     fireEvent.change(numberInputs[1], { target: { value: '100' } });
 
     await waitFor(() => {
-      expect(screen.getByText('$1,000.00')).toBeInTheDocument();
+      // $1,000.00 appears in both line item total and subtotal
+      expect(screen.getAllByText('$1,000.00').length).toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -117,7 +122,8 @@ describe('InvoiceForm', () => {
 
   it('disables remove button when only one line item', () => {
     render(<InvoiceForm clients={clients} />);
-    const removeButtons = screen.getAllByText('×');
+    // Remove buttons have SVG icons inside them
+    const removeButtons = screen.getAllByRole('button').filter(b => b.querySelector('svg'));
     expect(removeButtons[0]).toBeDisabled();
   });
 

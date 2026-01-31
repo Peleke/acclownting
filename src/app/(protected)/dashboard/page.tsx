@@ -21,47 +21,47 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow border">
-          <p className="text-sm text-gray-600">Invoiced This Month</p>
-          <p className="text-2xl font-bold text-gray-900">{formatCurrency(stats.total_invoiced)}</p>
+      <h1 className="text-xl font-semibold text-stone-900 tracking-tight mb-6">Dashboard</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+        <div className="bg-white rounded-xl border border-stone-200/60 shadow-card p-5">
+          <p className="text-[13px] font-medium text-stone-400 mb-1">Invoiced This Month</p>
+          <p className="text-2xl font-semibold text-stone-900 tracking-tight">{formatCurrency(stats.total_invoiced)}</p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow border">
-          <p className="text-sm text-gray-600">Collected This Month</p>
-          <p className="text-2xl font-bold text-green-600">{formatCurrency(stats.total_paid)}</p>
+        <div className="bg-white rounded-xl border border-stone-200/60 shadow-card p-5">
+          <p className="text-[13px] font-medium text-stone-400 mb-1">Collected This Month</p>
+          <p className="text-2xl font-semibold text-emerald-600 tracking-tight">{formatCurrency(stats.total_paid)}</p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow border">
-          <p className="text-sm text-gray-600">Total Outstanding</p>
-          <p className="text-2xl font-bold text-red-600">{formatCurrency(totalOwed)}</p>
+        <div className="bg-white rounded-xl border border-stone-200/60 shadow-card p-5">
+          <p className="text-[13px] font-medium text-stone-400 mb-1">Total Outstanding</p>
+          <p className="text-2xl font-semibold text-amber-600 tracking-tight">{formatCurrency(totalOwed)}</p>
         </div>
       </div>
 
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Client Balances</h2>
-      <div className="bg-white rounded-lg shadow border overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Invoiced</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Paid</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Balance</th>
+      <h2 className="text-sm font-semibold text-stone-900 mb-3">Client Balances</h2>
+      <div className="bg-white rounded-xl border border-stone-200/60 shadow-card overflow-x-auto">
+        <table className="min-w-full">
+          <thead>
+            <tr className="border-b border-stone-100">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Client</th>
+              <th className="px-5 py-3 text-right text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Invoiced</th>
+              <th className="px-5 py-3 text-right text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Paid</th>
+              <th className="px-5 py-3 text-right text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Balance</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
-            {balances?.map((b: { client_id: string; client_name: string; total_invoiced: number; total_paid: number; balance: number }) => (
-              <tr key={b.client_id}>
-                <td className="px-4 py-3 text-sm">{b.client_name}</td>
-                <td className="px-4 py-3 text-sm text-right">{formatCurrency(b.total_invoiced)}</td>
-                <td className="px-4 py-3 text-sm text-right">{formatCurrency(b.total_paid)}</td>
-                <td className="px-4 py-3 text-sm text-right font-medium">
+          <tbody>
+            {balances?.map((b: { client_id: string; client_name: string; total_invoiced: number; total_paid: number; balance: number }, idx: number) => (
+              <tr key={b.client_id} className={idx !== (balances?.length ?? 0) - 1 ? 'border-b border-stone-100/80' : ''}>
+                <td className="px-5 py-3.5 text-sm text-stone-700 font-medium">{b.client_name}</td>
+                <td className="px-5 py-3.5 text-sm text-stone-500 text-right tabular-nums">{formatCurrency(b.total_invoiced)}</td>
+                <td className="px-5 py-3.5 text-sm text-stone-500 text-right tabular-nums">{formatCurrency(b.total_paid)}</td>
+                <td className="px-5 py-3.5 text-sm text-right font-semibold text-stone-900 tabular-nums">
                   {formatCurrency(b.balance)}
                 </td>
               </tr>
             ))}
             {(!balances || balances.length === 0) && (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={4} className="px-5 py-12 text-center text-sm text-stone-400">
                   No client data yet.
                 </td>
               </tr>

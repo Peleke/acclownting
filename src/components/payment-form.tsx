@@ -64,7 +64,9 @@ export function PaymentForm({ invoiceId, maxAmount, onSuccess }: PaymentFormProp
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {errors.form && (
-        <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{errors.form}</p>
+        <div className="text-sm text-red-700 bg-red-50 border border-red-100 px-3 py-2.5 rounded-lg">
+          {errors.form}
+        </div>
       )}
       <Input
         id="amount"
@@ -95,7 +97,7 @@ export function PaymentForm({ invoiceId, maxAmount, onSuccess }: PaymentFormProp
         label="Reference (optional)"
         error={errors.reference}
       />
-      <div className="flex gap-2 justify-end">
+      <div className="flex gap-2 justify-end pt-1">
         <Button type="submit" disabled={loading}>
           {loading ? 'Recording...' : 'Record Payment'}
         </Button>

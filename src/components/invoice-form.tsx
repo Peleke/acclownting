@@ -93,9 +93,11 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
       {errors.form && (
-        <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{errors.form}</p>
+        <div className="text-sm text-red-700 bg-red-50 border border-red-100 px-3 py-2.5 rounded-lg">
+          {errors.form}
+        </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -117,88 +119,110 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
       </div>
 
       <div>
-        <h3 className="text-sm font-medium text-gray-700 mb-2">Line Items</h3>
-        <div className="space-y-2">
+        <h3 className="text-[13px] font-medium text-stone-600 mb-3">Line Items</h3>
+        <div className="rounded-xl border border-stone-200 overflow-hidden">
+          {/* Header */}
+          <div className="grid grid-cols-[1fr_5rem_7rem_6rem_2.5rem] gap-0 bg-stone-50 border-b border-stone-100 px-3 py-2">
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Description</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider text-right">Qty</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider text-right">Price</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider text-right">Total</span>
+            <span></span>
+          </div>
+          {/* Rows */}
           {lineItems.map((item, i) => (
-            <div key={i} className="flex gap-2 items-end">
-              <Input
-                label={i === 0 ? 'Description' : undefined}
+            <div key={i} className={`grid grid-cols-[1fr_5rem_7rem_6rem_2.5rem] gap-0 items-center px-3 py-2 ${i !== lineItems.length - 1 ? 'border-b border-stone-100' : ''}`}>
+              <input
                 value={item.description}
                 onChange={(e) => updateLineItem(i, 'description', e.target.value)}
-                className="flex-1"
+                className="bg-transparent text-sm text-stone-900 placeholder:text-stone-300 focus:outline-none w-full pr-2"
+                placeholder="Item description"
                 required
               />
-              <Input
-                label={i === 0 ? 'Qty' : undefined}
+              <input
                 type="number"
                 min="1"
                 step="1"
                 value={item.quantity}
                 onChange={(e) => updateLineItem(i, 'quantity', parseFloat(e.target.value) || 0)}
-                className="w-20"
+                className="bg-transparent text-sm text-stone-700 text-right tabular-nums focus:outline-none w-full"
                 required
               />
-              <Input
-                label={i === 0 ? 'Price' : undefined}
+              <input
                 type="number"
                 min="0"
                 step="0.01"
                 value={item.unit_price}
                 onChange={(e) => updateLineItem(i, 'unit_price', parseFloat(e.target.value) || 0)}
-                className="w-28"
+                className="bg-transparent text-sm text-stone-700 text-right tabular-nums focus:outline-none w-full"
                 required
               />
-              <div className={`w-24 text-right text-sm ${i === 0 ? 'pt-6' : ''}`}>
+              <div className="text-sm text-stone-700 text-right tabular-nums font-medium">
                 {formatCurrency(item.total)}
               </div>
               <button
                 type="button"
                 onClick={() => removeLineItem(i)}
-                className={`text-red-500 hover:text-red-700 text-lg px-2 ${i === 0 ? 'pt-6' : ''}`}
+                className="w-6 h-6 rounded-md flex items-center justify-center text-stone-300 hover:text-red-500 hover:bg-red-50 ml-auto"
                 disabled={lineItems.length === 1}
               >
-                &times;
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M1 1l12 12M13 1L1 13" />
+                </svg>
               </button>
             </div>
           ))}
         </div>
-        <Button type="button" variant="ghost" size="sm" onClick={addLineItem} className="mt-2">
-          + Add Line Item
-        </Button>
+        <button
+          type="button"
+          onClick={addLineItem}
+          className="mt-3 text-[13px] font-medium text-stone-400 hover:text-stone-600"
+        >
+          + Add line item
+        </button>
       </div>
 
-      <div className="flex flex-col items-end gap-2">
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-600">Tax Rate (%):</span>
-          <Input
+      <div className="flex flex-col items-end gap-2 p-4 bg-stone-50 rounded-xl border border-stone-100">
+        <div className="flex items-center gap-4 mb-2">
+          <span className="text-[13px] text-stone-500">Tax Rate (%)</span>
+          <input
             type="number"
             min="0"
             max="100"
             step="0.01"
             value={taxRate}
             onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
-            className="w-24"
+            className="w-20 rounded-lg border border-stone-200 bg-white px-2.5 py-1.5 text-sm text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500"
           />
         </div>
-        <div className="text-sm text-gray-600">Subtotal: {formatCurrency(totals.subtotal)}</div>
-        <div className="text-sm text-gray-600">Tax: {formatCurrency(totals.taxAmount)}</div>
-        <div className="text-lg font-semibold">Total: {formatCurrency(totals.total)}</div>
+        <div className="flex justify-between w-48 text-sm">
+          <span className="text-stone-400">Subtotal</span>
+          <span className="tabular-nums text-stone-600">{formatCurrency(totals.subtotal)}</span>
+        </div>
+        <div className="flex justify-between w-48 text-sm">
+          <span className="text-stone-400">Tax</span>
+          <span className="tabular-nums text-stone-600">{formatCurrency(totals.taxAmount)}</span>
+        </div>
+        <div className="flex justify-between w-48 pt-2 mt-1 border-t border-stone-200">
+          <span className="text-sm font-semibold text-stone-900">Total</span>
+          <span className="text-sm font-semibold text-stone-900 tabular-nums">{formatCurrency(totals.total)}</span>
+        </div>
       </div>
 
       <div>
-        <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="notes" className="block text-[13px] font-medium text-stone-600 mb-1.5">
           Notes
         </label>
         <textarea
           id="notes"
           name="notes"
           rows={3}
-          className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="block w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 shadow-soft hover:border-stone-300 focus:outline-none focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 transition-shadow resize-none"
         />
       </div>
 
-      <div className="flex gap-2 justify-end">
-        <Button type="button" variant="secondary" onClick={() => router.back()}>
+      <div className="flex gap-3 justify-end pt-2">
+        <Button type="button" variant="ghost" onClick={() => router.back()}>
           Cancel
         </Button>
         <Button type="submit" disabled={loading}>

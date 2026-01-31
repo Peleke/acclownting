@@ -15,7 +15,7 @@ describe('Button', () => {
 
   it('applies primary variant by default', () => {
     render(<Button>Primary</Button>);
-    expect(screen.getByRole('button').className).toContain('bg-blue-600');
+    expect(screen.getByRole('button').className).toContain('bg-stone-900');
   });
 
   it('applies danger variant classes', () => {
@@ -25,7 +25,7 @@ describe('Button', () => {
 
   it('applies secondary variant classes', () => {
     render(<Button variant="secondary">Cancel</Button>);
-    expect(screen.getByRole('button').className).toContain('bg-gray-200');
+    expect(screen.getByRole('button').className).toContain('border-stone-200');
   });
 
   it('applies ghost variant classes', () => {
@@ -38,7 +38,7 @@ describe('Button', () => {
     expect(screen.getByRole('button').className).toContain('px-3');
 
     rerender(<Button size="lg">Large</Button>);
-    expect(screen.getByRole('button').className).toContain('px-6');
+    expect(screen.getByRole('button').className).toContain('px-5');
   });
 
   it('calls onClick handler', () => {
@@ -67,6 +67,6 @@ describe('Button', () => {
 
   it('has disabled styling when disabled', () => {
     render(<Button disabled>Disabled</Button>);
-    expect(screen.getByRole('button').className).toContain('disabled:opacity-50');
+    expect(screen.getByRole('button').className).toContain('disabled:opacity-40');
   });
 });

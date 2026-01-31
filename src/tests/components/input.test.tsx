@@ -25,7 +25,7 @@ describe('Input', () => {
 
   it('applies normal border when no error', () => {
     render(<Input id="test" />);
-    expect(screen.getByRole('textbox').className).toContain('border-gray-300');
+    expect(screen.getByRole('textbox').className).toContain('border-stone-200');
   });
 
   it('forwards onChange', () => {

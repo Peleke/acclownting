@@ -20,7 +20,7 @@ export function ReportFilters() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-wrap gap-4 items-end">
+    <form onSubmit={handleSubmit} className="flex flex-wrap gap-3 items-end">
       <Input
         id="start"
         label="Start Date"

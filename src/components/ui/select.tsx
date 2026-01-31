@@ -11,15 +11,15 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor={id} className="block text-[13px] font-medium text-stone-600 mb-1.5">
             {label}
           </label>
         )}
         <select
           ref={ref}
           id={id}
-          className={`block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-            error ? 'border-red-300' : 'border-gray-300'
+          className={`block w-full rounded-lg border bg-white px-3 py-2 text-sm text-stone-900 shadow-soft focus:outline-none focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 transition-shadow appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2378716C%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_10px_center] bg-no-repeat pr-10 ${
+            error ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' : 'border-stone-200 hover:border-stone-300'
           } ${className}`}
           {...props}
         >
@@ -30,7 +30,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             </option>
           ))}
         </select>
-        {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-1.5 text-[13px] text-red-600">{error}</p>}
       </div>
     );
   }

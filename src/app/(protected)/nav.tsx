@@ -24,44 +24,50 @@ export function Nav({ profile }: { profile: Profile | null }) {
   }
 
   return (
-    <nav className="bg-white border-b border-gray-200">
+    <nav className="bg-white/80 backdrop-blur-xl border-b border-stone-200/60 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="text-lg font-bold text-gray-900">
+          <div className="flex items-center gap-1">
+            <Link href="/dashboard" className="text-[15px] font-bold text-stone-900 tracking-tight mr-6">
               Acclownting
             </Link>
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-medium ${
-                  pathname.startsWith(link.href)
-                    ? 'text-blue-600'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-            {profile?.role === 'admin' && (
-              <Link
-                href="/admin/users"
-                className={`text-sm font-medium ${
-                  pathname.startsWith('/admin')
-                    ? 'text-blue-600'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Admin
-              </Link>
-            )}
+            <div className="flex items-center gap-0.5">
+              {links.map((link) => {
+                const isActive = pathname.startsWith(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all ${
+                      isActive
+                        ? 'text-stone-900 bg-stone-100'
+                        : 'text-stone-500 hover:text-stone-700 hover:bg-stone-50'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+              {profile?.role === 'admin' && (
+                <Link
+                  href="/admin/users"
+                  className={`px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all ${
+                    pathname.startsWith('/admin')
+                      ? 'text-stone-900 bg-stone-100'
+                      : 'text-stone-500 hover:text-stone-700 hover:bg-stone-50'
+                  }`}
+                >
+                  Admin
+                </Link>
+              )}
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{profile?.full_name}</span>
+          <div className="flex items-center gap-3">
+            <span className="text-[13px] text-stone-500 font-medium">{profile?.full_name}</span>
+            <div className="w-px h-4 bg-stone-200" />
             <button
               onClick={handleSignOut}
-              className="text-sm text-gray-600 hover:text-gray-900"
+              className="text-[13px] text-stone-400 hover:text-stone-600 font-medium"
             >
               Sign Out
             </button>

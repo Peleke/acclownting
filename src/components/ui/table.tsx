@@ -20,36 +20,38 @@ export function Table<T extends { id: string }>({
   emptyMessage = 'No data found.',
 }: TableProps<T>) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
+    <div className="overflow-x-auto rounded-xl border border-stone-200/60 bg-white shadow-card">
+      <table className="min-w-full">
+        <thead>
+          <tr className="border-b border-stone-100">
             {columns.map((col, i) => (
               <th
                 key={i}
-                className={`px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${col.className || ''}`}
+                className={`px-5 py-3 text-left text-[11px] font-semibold text-stone-400 uppercase tracking-wider ${col.className || ''}`}
               >
                 {col.header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="px-4 py-8 text-center text-gray-500">
+              <td colSpan={columns.length} className="px-5 py-12 text-center text-sm text-stone-400">
                 {emptyMessage}
               </td>
             </tr>
           ) : (
-            data.map((row) => (
+            data.map((row, rowIdx) => (
               <tr
                 key={row.id}
                 onClick={() => onRowClick?.(row)}
-                className={onRowClick ? 'cursor-pointer hover:bg-gray-50' : ''}
+                className={`${rowIdx !== data.length - 1 ? 'border-b border-stone-100/80' : ''} ${
+                  onRowClick ? 'cursor-pointer hover:bg-stone-50/60' : ''
+                }`}
               >
                 {columns.map((col, i) => (
-                  <td key={i} className={`px-4 py-3 text-sm text-gray-900 ${col.className || ''}`}>
+                  <td key={i} className={`px-5 py-3.5 text-sm text-stone-700 ${col.className || ''}`}>
                     {typeof col.accessor === 'function'
                       ? col.accessor(row)
                       : (row[col.accessor] as ReactNode)}

@@ -39,3 +39,7 @@ next-env.d.ts
 .claude/
 _bmad/
 _bmad-output/
+
+playwright-report/
+test-results/
+playwright-report-e2e/
