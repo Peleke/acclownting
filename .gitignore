@@ -43,3 +43,6 @@ _bmad-output/
 playwright-report/
 test-results/
 playwright-report-e2e/
+
+# Supabase CLI temp files
+supabase/.temp/

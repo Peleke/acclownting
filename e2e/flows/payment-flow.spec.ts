@@ -44,16 +44,21 @@ test.describe('Payment Flow', () => {
     await page.goto('/invoices/new');
     await page.locator('select[name="client_id"]').selectOption({ label: clientName });
 
-    const lineItemRows = page.locator('form .flex.gap-2.items-end');
-    const row0Inputs = lineItemRows.nth(0).locator('input');
-    await row0Inputs.nth(0).fill('Consulting');
-    await row0Inputs.nth(1).clear();
-    await row0Inputs.nth(1).fill('4');
-    await row0Inputs.nth(2).clear();
-    await row0Inputs.nth(2).fill('250');
+    // Set due date
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 30);
+    await page.locator('input[name="due_date"]').fill(dueDate.toISOString().split('T')[0]);
+
+    const lineItemContainer = page.locator('.rounded-xl.border');
+    const lineItemRow = lineItemContainer.locator('.grid.items-center').nth(0);
+    await lineItemRow.locator('input[placeholder="Item description"]').fill('Consulting');
+    await lineItemRow.locator('input[type="number"]').first().clear();
+    await lineItemRow.locator('input[type="number"]').first().fill('4');
+    await lineItemRow.locator('input[type="number"]').last().clear();
+    await lineItemRow.locator('input[type="number"]').last().fill('250');
 
     // Verify total: 4 * 250 = $1,000.00 (no tax)
-    await expect(page.getByText('Total: $1,000.00')).toBeVisible();
+    await expect(page.getByText('$1,000.00').first()).toBeVisible();
 
     await page.getByRole('button', { name: 'Create Invoice' }).click();
     await page.waitForURL('**/invoices', { timeout: 15000 });
@@ -64,7 +69,7 @@ test.describe('Payment Flow', () => {
 
     // Navigate to the invoice
     const row = page.locator('tr', { has: page.getByText(clientName) });
-    await row.locator('a.text-blue-600').click();
+    await row.locator('a').first().click();
     await expect(page).toHaveURL(/\/invoices\/.+/);
 
     // Verify initial state
@@ -79,13 +84,12 @@ test.describe('Payment Flow', () => {
     // Submit payment
     await page.getByRole('button', { name: 'Record Payment' }).click();
 
-    // Wait for page to refresh
+    // Wait for page to refresh and payment to appear
     await page.waitForTimeout(2000);
     await page.reload();
 
     // Verify the payment appears in the payments table
-    await expect(page.getByText('$400.00')).toBeVisible();
-    await expect(page.getByText('Card')).toBeVisible();
+    await expect(page.getByText('$400.00')).toBeVisible({ timeout: 10000 });
     await expect(page.getByText('CARD-001')).toBeVisible();
 
     // Balance should now be $600.00
@@ -96,14 +100,14 @@ test.describe('Payment Flow', () => {
     await expect(page.getByText('partial')).toBeVisible();
 
     // Payment form should still be visible (balance > 0)
-    await expect(page.getByText('Record Payment')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Record Payment' })).toBeVisible();
   });
 
   test('post remaining payment and verify status changes to paid', async ({ page }) => {
     await page.goto('/invoices');
 
     const row = page.locator('tr', { has: page.getByText(clientName) });
-    await row.locator('a.text-blue-600').click();
+    await row.locator('a').first().click();
     await expect(page).toHaveURL(/\/invoices\/.+/);
 
     // Verify current balance

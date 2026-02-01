@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, '.env.local') });
 
 /**
  * Playwright config for full E2E user flow tests.
@@ -17,16 +21,18 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './e2e/flows',
-  fullyParallel: false, // Flow tests are serial by nature
+  globalSetup: './e2e/global-setup.ts',
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: 1, // Serial execution for dependent flow tests
+  workers: 1,
   reporter: [['html', { outputFolder: 'playwright-report-e2e' }]],
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: 'on',
     video: 'retain-on-failure',
+    storageState: './test-results/.auth/user.json',
   },
   projects: [
     {

@@ -56,17 +56,16 @@ test.describe('Invoice Lifecycle', () => {
     await page.locator('input[name="due_date"]').fill(dueDateStr);
 
     // Fill in the first line item
-    // Line items are controlled inputs without name attributes.
-    // First row has labels; inputs are in flex rows with the remove button.
-    const lineItemRows = page.locator('form .flex.gap-2.items-end');
+    // Line items use a grid layout with specific column widths
+    const lineItemContainer = page.locator('.rounded-xl.border');
+    const lineItemRows = lineItemContainer.locator('.grid.items-center');
 
-    // First line item (index 0): Description, Qty, Price
-    const row0Inputs = lineItemRows.nth(0).locator('input');
-    await row0Inputs.nth(0).fill('Web Design Services');
-    await row0Inputs.nth(1).clear();
-    await row0Inputs.nth(1).fill('2');
-    await row0Inputs.nth(2).clear();
-    await row0Inputs.nth(2).fill('500');
+    // First line item: Description (text input), Qty (number), Price (number)
+    await lineItemRows.nth(0).locator('input[placeholder="Item description"]').fill('Web Design Services');
+    await lineItemRows.nth(0).locator('input[type="number"]').first().clear();
+    await lineItemRows.nth(0).locator('input[type="number"]').first().fill('2');
+    await lineItemRows.nth(0).locator('input[type="number"]').last().clear();
+    await lineItemRows.nth(0).locator('input[type="number"]').last().fill('500');
 
     // Verify line item total: 2 * 500 = $1,000.00
     await expect(lineItemRows.nth(0).getByText('$1,000.00')).toBeVisible();
@@ -74,26 +73,25 @@ test.describe('Invoice Lifecycle', () => {
     // Add a second line item
     await page.getByRole('button', { name: /add line item/i }).click();
 
-    const row1Inputs = lineItemRows.nth(1).locator('input');
-    await row1Inputs.nth(0).fill('Hosting Setup');
-    await row1Inputs.nth(1).clear();
-    await row1Inputs.nth(1).fill('1');
-    await row1Inputs.nth(2).clear();
-    await row1Inputs.nth(2).fill('250');
+    await lineItemRows.nth(1).locator('input[placeholder="Item description"]').fill('Hosting Setup');
+    await lineItemRows.nth(1).locator('input[type="number"]').first().clear();
+    await lineItemRows.nth(1).locator('input[type="number"]').first().fill('1');
+    await lineItemRows.nth(1).locator('input[type="number"]').last().clear();
+    await lineItemRows.nth(1).locator('input[type="number"]').last().fill('250');
 
     // Verify second line item total: 1 * 250 = $250.00
     await expect(lineItemRows.nth(1).getByText('$250.00')).toBeVisible();
 
     // Set tax rate to 10%
-    const taxInput = page.locator('.flex.items-center.gap-4 input[type="number"]');
+    const taxInput = page.locator('input[type="number"][max="100"]');
     await taxInput.clear();
     await taxInput.fill('10');
 
     // Verify totals in the summary area
-    // Subtotal: $1,250.00, Tax: $125.00, Total: $1,375.00
-    await expect(page.getByText('Subtotal: $1,250.00')).toBeVisible();
-    await expect(page.getByText('Tax: $125.00')).toBeVisible();
-    await expect(page.getByText('Total: $1,375.00')).toBeVisible();
+    // Subtotal and amounts are in separate elements
+    await expect(page.getByText('$1,250.00').first()).toBeVisible();
+    await expect(page.getByText('$125.00')).toBeVisible();
+    await expect(page.getByText('$1,375.00').first()).toBeVisible();
 
     // Add notes
     await page.locator('textarea[name="notes"]').fill('Thank you for your business!');
@@ -119,7 +117,7 @@ test.describe('Invoice Lifecycle', () => {
     await expect(row.getByText('draft')).toBeVisible();
 
     // Capture the invoice number from the link (e.g., "#1")
-    const invoiceLink = row.locator('a.text-blue-600');
+    const invoiceLink = row.locator('a').first();
     const linkText = await invoiceLink.textContent();
     invoiceNumber = linkText?.replace('#', '') || '';
     expect(invoiceNumber).toBeTruthy();
@@ -130,7 +128,7 @@ test.describe('Invoice Lifecycle', () => {
 
     // Click into the invoice
     const row = page.locator('tr', { has: page.getByText(clientName) });
-    await row.locator('a.text-blue-600').click();
+    await row.locator('a').first().click();
 
     await expect(page).toHaveURL(/\/invoices\/.+/);
     await expect(page.locator('h1')).toContainText(`Invoice #${invoiceNumber}`);
@@ -146,8 +144,8 @@ test.describe('Invoice Lifecycle', () => {
     await expect(page.getByText('Hosting Setup')).toBeVisible();
 
     // Verify totals in the line items section
-    await expect(page.getByText('Subtotal: $1,250.00')).toBeVisible();
-    await expect(page.getByText('Total: $1,375.00')).toBeVisible();
+    await expect(page.getByText('$1,250.00').first()).toBeVisible();
+    await expect(page.getByText('$1,375.00').first()).toBeVisible();
 
     // Verify notes
     await expect(page.getByText('Thank you for your business!')).toBeVisible();
@@ -159,7 +157,7 @@ test.describe('Invoice Lifecycle', () => {
     await expect(page.getByText('No payments recorded.')).toBeVisible();
 
     // Record Payment form should be visible (balance > 0)
-    await expect(page.getByText('Record Payment')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Record Payment' })).toBeVisible();
 
     // Download PDF button should be present
     await expect(page.getByRole('button', { name: /download pdf/i })).toBeVisible();

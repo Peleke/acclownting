@@ -19,7 +19,7 @@ test.describe('Admin Flow', () => {
 
     // Table headers
     await expect(page.getByText('Name', { exact: true })).toBeVisible();
-    await expect(page.getByText('Role', { exact: true })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Role' })).toBeVisible();
     await expect(page.getByText('Created', { exact: true })).toBeVisible();
   });
 
@@ -38,12 +38,9 @@ test.describe('Admin Flow', () => {
     await page.goto('/admin/users');
     await page.getByRole('button', { name: /invite user/i }).click();
 
-    // Remove required attributes to test Zod validation
-    await page.locator('input[name="full_name"]').evaluate((el: HTMLInputElement) => {
-      el.removeAttribute('required');
-    });
-    await page.locator('input[name="email"]').evaluate((el: HTMLInputElement) => {
-      el.removeAttribute('required');
+    // Disable HTML5 validation to test Zod validation
+    await page.locator('form').evaluate((form: HTMLFormElement) => {
+      form.noValidate = true;
     });
 
     // Submit empty form
@@ -52,7 +49,7 @@ test.describe('Admin Flow', () => {
     await page.getByRole('button', { name: /send invite/i }).click();
 
     // Should show validation error
-    await expect(page.locator('.text-red-600').first()).toBeVisible();
+    await expect(page.locator('.text-red-700').first()).toBeVisible();
   });
 
   test('invite form submits to API endpoint', async ({ page }) => {
