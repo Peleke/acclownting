@@ -20,12 +20,12 @@ describe('Input', () => {
 
   it('applies error border styling', () => {
     render(<Input id="test" error="Bad" />);
-    expect(screen.getByRole('textbox').className).toContain('border-red-300');
+    expect(screen.getByRole('textbox').className).toContain('border-destructive');
   });
 
   it('applies normal border when no error', () => {
     render(<Input id="test" />);
-    expect(screen.getByRole('textbox').className).toContain('border-stone-200');
+    expect(screen.getByRole('textbox').className).toContain('border-input');
   });
 
   it('forwards onChange', () => {

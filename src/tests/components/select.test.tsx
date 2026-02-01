@@ -27,7 +27,7 @@ describe('Select', () => {
 
   it('applies error border styling', () => {
     render(<Select id="test" options={options} error="Required" />);
-    expect(screen.getByRole('combobox').className).toContain('border-red-300');
+    expect(screen.getByRole('combobox').className).toContain('border-destructive');
   });
 
   it('forwards onChange', () => {

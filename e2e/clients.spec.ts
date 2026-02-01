@@ -27,7 +27,7 @@ test.describe('Clients Page', () => {
     const submitBtn = page.locator('form button[type="submit"]');
     await submitBtn.click();
     // Zod error should appear
-    await expect(page.locator('.text-red-600').first()).toBeVisible();
+    await expect(page.locator('.text-destructive').first()).toBeVisible();
   });
 
   test('shows empty state when no clients', async ({ page }) => {

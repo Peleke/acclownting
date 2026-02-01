@@ -9,29 +9,29 @@ describe('StatusBadge', () => {
     expect(screen.getByText('paid').className).toContain('capitalize');
   });
 
-  it('applies emerald classes for paid', () => {
+  it('applies paid status classes', () => {
     render(<StatusBadge status="paid" />);
-    expect(screen.getByText('paid').className).toContain('bg-emerald');
+    expect(screen.getByText('paid').className).toContain('bg-status-paid');
   });
 
-  it('applies red classes for overdue', () => {
+  it('applies overdue status classes', () => {
     render(<StatusBadge status="overdue" />);
-    expect(screen.getByText('overdue').className).toContain('bg-red');
+    expect(screen.getByText('overdue').className).toContain('bg-status-overdue');
   });
 
-  it('applies accent classes for sent', () => {
+  it('applies sent status classes', () => {
     render(<StatusBadge status="sent" />);
-    expect(screen.getByText('sent').className).toContain('bg-accent');
+    expect(screen.getByText('sent').className).toContain('bg-status-sent');
   });
 
-  it('applies amber classes for partial', () => {
+  it('applies partial status classes', () => {
     render(<StatusBadge status="partial" />);
-    expect(screen.getByText('partial').className).toContain('bg-amber');
+    expect(screen.getByText('partial').className).toContain('bg-status-partial');
   });
 
-  it('applies stone classes for draft', () => {
+  it('applies draft status classes', () => {
     render(<StatusBadge status="draft" />);
-    expect(screen.getByText('draft').className).toContain('bg-stone');
+    expect(screen.getByText('draft').className).toContain('bg-status-draft');
   });
 
   it('has rounded-md class for badge shape', () => {

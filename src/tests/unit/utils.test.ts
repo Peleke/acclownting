@@ -150,19 +150,19 @@ describe('calculateInvoiceTotals', () => {
 
 describe('getStatusColor', () => {
   it('returns correct class for each status', () => {
-    expect(getStatusColor('draft')).toContain('stone');
-    expect(getStatusColor('sent')).toContain('accent');
-    expect(getStatusColor('partial')).toContain('amber');
-    expect(getStatusColor('paid')).toContain('emerald');
-    expect(getStatusColor('overdue')).toContain('red');
+    expect(getStatusColor('draft')).toContain('status-draft');
+    expect(getStatusColor('sent')).toContain('status-sent');
+    expect(getStatusColor('partial')).toContain('status-partial');
+    expect(getStatusColor('paid')).toContain('status-paid');
+    expect(getStatusColor('overdue')).toContain('status-overdue');
   });
 
   it('returns default for unknown status', () => {
-    expect(getStatusColor('unknown')).toContain('stone');
+    expect(getStatusColor('unknown')).toContain('status-draft');
   });
 
   it('returns default for empty string', () => {
-    expect(getStatusColor('')).toContain('stone');
+    expect(getStatusColor('')).toContain('status-draft');
   });
 
   it('includes both bg and text classes', () => {
