@@ -42,11 +42,12 @@ test.describe('New Invoice Page', () => {
   test('can add line items', async ({ page }) => {
     await page.goto('/invoices/new');
     // Count initial line item rows (each has a × button)
-    const removeButtons = page.locator('button:has-text("×")');
-    const initialCount = await removeButtons.count();
+    // Count initial line item rows by description placeholder
+    const descInputs = page.locator('input[placeholder="Item description"]');
+    const initialCount = await descInputs.count();
 
     await page.getByRole('button', { name: /add line item/i }).click();
-    await expect(removeButtons).toHaveCount(initialCount + 1);
+    await expect(descInputs).toHaveCount(initialCount + 1);
   });
 
   test('shows subtotal, tax, and total', async ({ page }) => {
