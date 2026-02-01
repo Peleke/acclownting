@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { formatCurrency } from '@/lib/utils';
 import { ReportFilters } from '@/components/report-filters';
@@ -77,7 +78,9 @@ export default async function ReportsPage({
                 const isOverdue = overdueClientIds.has(b.client_id) && b.balance > 0;
                 return (
                   <tr key={b.client_id} className={idx !== (balances?.length ?? 0) - 1 ? 'border-b border-border/30' : ''}>
-                    <td className="px-5 py-3.5 text-sm text-foreground font-medium">{b.client_name}</td>
+                    <td className="px-5 py-3.5 text-sm font-medium">
+                      <Link href={`/clients/${b.client_id}`} className="text-foreground hover:text-primary">{b.client_name}</Link>
+                    </td>
                     <td className="px-5 py-3.5 text-sm text-muted-foreground text-right tabular-nums">{formatCurrency(b.total_invoiced)}</td>
                     <td className="px-5 py-3.5 text-sm text-muted-foreground text-right tabular-nums">{formatCurrency(b.total_paid)}</td>
                     <td className={`px-5 py-3.5 text-sm text-right font-bold tabular-nums ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>

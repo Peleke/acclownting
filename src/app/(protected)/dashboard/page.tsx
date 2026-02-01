@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { formatCurrency } from '@/lib/utils';
 
@@ -51,7 +52,9 @@ export default async function DashboardPage() {
           <tbody>
             {balances?.map((b: { client_id: string; client_name: string; total_invoiced: number; total_paid: number; balance: number }, idx: number) => (
               <tr key={b.client_id} className={idx !== (balances?.length ?? 0) - 1 ? 'border-b border-border/30' : ''}>
-                <td className="px-5 py-3.5 text-sm text-foreground font-medium">{b.client_name}</td>
+                <td className="px-5 py-3.5 text-sm font-medium">
+                  <Link href={`/clients/${b.client_id}`} className="text-foreground hover:text-primary">{b.client_name}</Link>
+                </td>
                 <td className="px-5 py-3.5 text-sm text-muted-foreground text-right tabular-nums">{formatCurrency(b.total_invoiced)}</td>
                 <td className="px-5 py-3.5 text-sm text-muted-foreground text-right tabular-nums">{formatCurrency(b.total_paid)}</td>
                 <td className="px-5 py-3.5 text-sm text-right font-semibold text-foreground tabular-nums">

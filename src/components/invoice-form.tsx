@@ -12,11 +12,12 @@ import type { Client, LineItem } from '@/lib/types';
 
 interface InvoiceFormProps {
   clients: Client[];
+  defaultClientId?: string;
 }
 
 const emptyLineItem: LineItem = { description: '', quantity: 1, unit_price: 0, total: 0 };
 
-export function InvoiceForm({ clients }: InvoiceFormProps) {
+export function InvoiceForm({ clients, defaultClientId }: InvoiceFormProps) {
   const router = useRouter();
   const supabase = createClient();
   const [lineItems, setLineItems] = useState<LineItem[]>([{ ...emptyLineItem }]);
@@ -105,6 +106,7 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
           id="client_id"
           name="client_id"
           label="Client"
+          defaultValue={defaultClientId}
           options={clients.map((c) => ({ value: c.id, label: c.name }))}
           error={errors.client_id}
           required
