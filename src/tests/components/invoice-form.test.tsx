@@ -179,7 +179,6 @@ describe('InvoiceForm', () => {
       },
     })) as ReturnType<typeof vi.fn>;
 
-    const user = userEvent.setup();
     render(
       <InvoiceForm
         clients={clients}
