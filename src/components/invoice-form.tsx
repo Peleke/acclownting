@@ -13,15 +13,26 @@ import type { Client, LineItem } from '@/lib/types';
 interface InvoiceFormProps {
   clients: Client[];
   defaultClientId?: string;
+  invoice?: {
+    id: string;
+    client_id: string;
+    due_date: string | null;
+    line_items: LineItem[];
+    tax_rate: number;
+    notes: string | null;
+  };
 }
 
 const emptyLineItem: LineItem = { description: '', quantity: 1, unit_price: 0, total: 0 };
 
-export function InvoiceForm({ clients, defaultClientId }: InvoiceFormProps) {
+export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormProps) {
   const router = useRouter();
   const supabase = createClient();
-  const [lineItems, setLineItems] = useState<LineItem[]>([{ ...emptyLineItem }]);
-  const [taxRate, setTaxRate] = useState(0);
+  const isEdit = !!invoice;
+  const [lineItems, setLineItems] = useState<LineItem[]>(
+    invoice?.line_items?.length ? invoice.line_items : [{ ...emptyLineItem }]
+  );
+  const [taxRate, setTaxRate] = useState(invoice ? invoice.tax_rate * 100 : 0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
@@ -77,11 +88,19 @@ export function InvoiceForm({ clients, defaultClientId }: InvoiceFormProps) {
       return;
     }
 
-    const { data: userData } = await supabase.auth.getUser();
-    const { error } = await supabase.from('invoices').insert({
-      ...result.data,
-      created_by: userData.user!.id,
-    });
+    let error;
+    if (isEdit) {
+      ({ error } = await supabase
+        .from('invoices')
+        .update(result.data)
+        .eq('id', invoice!.id));
+    } else {
+      const { data: userData } = await supabase.auth.getUser();
+      ({ error } = await supabase.from('invoices').insert({
+        ...result.data,
+        created_by: userData.user!.id,
+      }));
+    }
 
     if (error) {
       setErrors({ form: error.message });
@@ -89,7 +108,7 @@ export function InvoiceForm({ clients, defaultClientId }: InvoiceFormProps) {
       return;
     }
 
-    router.push('/invoices');
+    router.push(isEdit ? `/invoices/${invoice!.id}` : '/invoices');
     router.refresh();
   }
 
@@ -106,7 +125,7 @@ export function InvoiceForm({ clients, defaultClientId }: InvoiceFormProps) {
           id="client_id"
           name="client_id"
           label="Client"
-          defaultValue={defaultClientId}
+          defaultValue={invoice?.client_id || defaultClientId}
           options={clients.map((c) => ({ value: c.id, label: c.name }))}
           error={errors.client_id}
           required
@@ -116,6 +135,7 @@ export function InvoiceForm({ clients, defaultClientId }: InvoiceFormProps) {
           name="due_date"
           label="Due Date"
           type="date"
+          defaultValue={invoice?.due_date || ''}
           error={errors.due_date}
         />
       </div>
@@ -219,6 +239,7 @@ export function InvoiceForm({ clients, defaultClientId }: InvoiceFormProps) {
           id="notes"
           name="notes"
           rows={3}
+          defaultValue={invoice?.notes || ''}
           className="block w-full rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 shadow-soft hover:border-input/80 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring transition-shadow resize-none"
         />
       </div>
@@ -228,7 +249,7 @@ export function InvoiceForm({ clients, defaultClientId }: InvoiceFormProps) {
           Cancel
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? 'Creating...' : 'Create Invoice'}
+          {loading ? (isEdit ? 'Saving...' : 'Creating...') : (isEdit ? 'Save Changes' : 'Create Invoice')}
         </Button>
       </div>
     </form>

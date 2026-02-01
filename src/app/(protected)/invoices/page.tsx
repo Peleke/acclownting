@@ -78,13 +78,17 @@ export default async function InvoicesPage({
           </thead>
           <tbody>
             {invoices?.map((inv, idx) => (
-              <tr key={inv.id} className={`hover:bg-muted/50 ${idx !== (invoices?.length ?? 0) - 1 ? 'border-b border-border/30' : ''}`}>
+              <tr key={inv.id} className={`hover:bg-muted/50 cursor-pointer ${idx !== (invoices?.length ?? 0) - 1 ? 'border-b border-border/30' : ''}`}>
                 <td className="px-5 py-3.5 text-sm">
                   <Link href={`/invoices/${inv.id}`} className="text-foreground font-medium hover:text-primary">
                     #{inv.invoice_number}
                   </Link>
                 </td>
-                <td className="px-5 py-3.5 text-sm text-muted-foreground">{(inv.client as { name: string } | null)?.name || '-'}</td>
+                <td className="px-5 py-3.5 text-sm">
+                  <Link href={`/invoices/${inv.id}`} className="text-muted-foreground hover:text-primary">
+                    {(inv.client as { name: string } | null)?.name || '-'}
+                  </Link>
+                </td>
                 <td className="px-5 py-3.5 text-sm text-muted-foreground">{formatDate(inv.created_at)}</td>
                 <td className="px-5 py-3.5 text-sm"><StatusBadge status={inv.status} /></td>
                 <td className="px-5 py-3.5 text-sm text-right tabular-nums text-foreground/80">{formatCurrency(inv.total)}</td>

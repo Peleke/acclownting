@@ -5,7 +5,7 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
 import { InvoiceDetailClient } from './invoice-detail-client';
-import { MarkAsSentButton, PrintButton } from './invoice-actions';
+import { MarkAsSentButton, PrintButton, StatusOverride, DeletePaymentButton } from './invoice-actions';
 
 export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -63,6 +63,9 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
             <MarkAsSentButton invoiceId={invoice.id} />
           )}
           <PrintButton invoiceId={invoice.id} />
+          <Link href={`/invoices/${invoice.id}/edit`}>
+            <Button variant="secondary">Edit Invoice</Button>
+          </Link>
           <a href={`/api/invoices/${id}/pdf`} target="_blank" rel="noopener">
             <Button variant="secondary">Download PDF</Button>
           </a>
@@ -127,6 +130,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                     <th className="px-5 py-2.5 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Method</th>
                     <th className="px-5 py-2.5 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Reference</th>
                     <th className="px-5 py-2.5 text-right text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Amount</th>
+                    <th className="w-10"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -136,6 +140,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                       <td className="px-5 py-3 text-sm text-muted-foreground capitalize">{p.method}</td>
                       <td className="px-5 py-3 text-sm text-muted-foreground">{p.reference || '-'}</td>
                       <td className="px-5 py-3 text-sm text-right tabular-nums text-foreground/80 font-medium">{formatCurrency(p.amount)}</td>
+                      <td className="px-2 py-3"><DeletePaymentButton paymentId={p.id} /></td>
                     </tr>
                   ))}
                 </tbody>
@@ -166,6 +171,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
           <div className="bg-card rounded-xl border border-border shadow-card p-5">
             <h2 className="text-sm font-semibold text-foreground mb-3">Details</h2>
             <dl className="space-y-3 text-sm">
+              <StatusOverride invoiceId={invoice.id} currentStatus={invoice.status} />
               <div>
                 <dt className="text-muted-foreground text-[13px]">Created</dt>
                 <dd className="text-foreground/80 font-medium mt-0.5">{formatDate(invoice.created_at)}</dd>

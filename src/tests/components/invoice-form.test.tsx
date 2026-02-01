@@ -143,4 +143,61 @@ describe('InvoiceForm', () => {
     const select = screen.getByLabelText('Client') as HTMLSelectElement;
     expect(select.value).toBe(MOCK_CLIENT_2.id);
   });
+
+  it('renders in edit mode with pre-populated data', () => {
+    render(
+      <InvoiceForm
+        clients={clients}
+        invoice={{
+          id: 'inv-1',
+          client_id: MOCK_CLIENT.id,
+          due_date: '2025-12-31',
+          line_items: [{ description: 'Consulting', quantity: 5, unit_price: 200, total: 1000 }],
+          tax_rate: 0.1,
+          notes: 'Net 30',
+        }}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Save Changes' })).toBeInTheDocument();
+    const select = screen.getByLabelText('Client') as HTMLSelectElement;
+    expect(select.value).toBe(MOCK_CLIENT.id);
+    expect(screen.getByLabelText('Due Date')).toHaveValue('2025-12-31');
+    expect(screen.getByLabelText('Notes')).toHaveValue('Net 30');
+  });
+
+  it('calls update instead of insert in edit mode', async () => {
+    const mockUpdate = vi.fn().mockReturnValue({
+      eq: vi.fn().mockResolvedValue({ data: null, error: null }),
+    });
+    vi.mocked(await import('@/lib/supabase/client')).createClient = (() => ({
+      from: () => ({
+        update: mockUpdate,
+        insert: mockInsert,
+      }),
+      auth: {
+        getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null }),
+      },
+    })) as ReturnType<typeof vi.fn>;
+
+    const user = userEvent.setup();
+    render(
+      <InvoiceForm
+        clients={clients}
+        invoice={{
+          id: 'inv-1',
+          client_id: MOCK_CLIENT.id,
+          due_date: '2025-12-31',
+          line_items: [{ description: 'Consulting', quantity: 5, unit_price: 200, total: 1000 }],
+          tax_rate: 0.1,
+          notes: null,
+        }}
+      />
+    );
+    fireEvent.submit(screen.getByRole('button', { name: 'Save Changes' }).closest('form')!);
+
+    await waitFor(() => {
+      expect(mockUpdate).toHaveBeenCalled();
+      expect(mockInsert).not.toHaveBeenCalled();
+    });
+  });
 });
