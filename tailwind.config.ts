@@ -9,43 +9,50 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        // Warm neutral palette
-        stone: {
-          50: '#FAFAF9',
-          100: '#F5F5F4',
-          150: '#EEEEEC',
-          200: '#E7E5E4',
-          300: '#D6D3D1',
-          400: '#A8A29E',
-          500: '#78716C',
-          600: '#57534E',
-          700: '#44403C',
-          800: '#292524',
-          900: '#1C1917',
-          950: '#0C0A09',
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
-        // Single accent: a refined indigo-violet
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
         accent: {
-          50: '#F5F3FF',
-          100: '#EDE9FE',
-          200: '#DDD6FE',
-          300: '#C4B5FD',
-          400: '#A78BFA',
-          500: '#8B5CF6',
-          600: '#7C3AED',
-          700: '#6D28D9',
-          800: '#5B21B6',
-          900: '#4C1D95',
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
-        // Semantic status colors — muted, sophisticated
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        // Semantic status colors
         status: {
-          draft: { bg: '#F5F5F4', text: '#57534E', dot: '#A8A29E' },
-          sent: { bg: '#EDE9FE', text: '#6D28D9', dot: '#8B5CF6' },
+          draft: { bg: '#F4F4F5', text: '#52525B', dot: '#A1A1AA' },
+          sent: { bg: '#DBEAFE', text: '#1D4ED8', dot: '#3B82F6' },
           partial: { bg: '#FEF3C7', text: '#92400E', dot: '#F59E0B' },
-          paid: { bg: '#ECFDF5', text: '#065F46', dot: '#10B981' },
-          overdue: { bg: '#FEF2F2', text: '#991B1B', dot: '#EF4444' },
+          paid: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E' },
+          overdue: { bg: '#FFE4E9', text: '#9F1239', dot: '#DF2F4A' },
         },
       },
       fontFamily: {
@@ -53,6 +60,9 @@ const config: Config = {
         mono: ['var(--font-geist-mono)', 'monospace'],
       },
       borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
         'xl': '0.75rem',
         '2xl': '1rem',
       },
