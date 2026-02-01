@@ -34,4 +34,14 @@ test.describe('Clients Page', () => {
     await page.goto('/clients');
     await expect(page.getByText(/no client/i)).toBeVisible();
   });
+
+  test('renders search input on clients page', async ({ page }) => {
+    await page.goto('/clients');
+    await expect(page.locator('input[name="q"]')).toBeVisible();
+  });
+
+  test('search with no results shows no-match message', async ({ page }) => {
+    await page.goto('/clients?q=ZZZZNONEXISTENT');
+    await expect(page.getByText(/no clients match/i)).toBeVisible();
+  });
 });

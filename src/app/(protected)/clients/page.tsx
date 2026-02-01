@@ -1,19 +1,29 @@
 import Link from 'next/link';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { ClientsListClient } from './clients-list-client';
+import { ClientSearch } from './client-search';
 
-export default async function ClientsPage() {
+export default async function ClientsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q } = await searchParams;
   const supabase = await createServerSupabaseClient();
-  const { data: clients } = await supabase
-    .from('clients')
-    .select('*')
-    .order('name');
+  let query = supabase.from('clients').select('*').order('name');
+  if (q) {
+    query = query.ilike('name', `%${q}%`);
+  }
+  const { data: clients } = await query;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-foreground tracking-tight">Clients</h1>
         <ClientsListClient />
+      </div>
+      <div className="mb-4">
+        <ClientSearch defaultValue={q ?? ''} />
       </div>
       <div className="bg-card rounded-xl border border-border shadow-card overflow-x-auto">
         <table className="min-w-full">
@@ -39,7 +49,7 @@ export default async function ClientsPage() {
             {(!clients || clients.length === 0) && (
               <tr>
                 <td colSpan={3} className="px-5 py-12 text-center text-sm text-muted-foreground">
-                  No clients yet. Create your first client to get started.
+                  {q ? 'No clients match your search.' : 'No clients yet. Create your first client to get started.'}
                 </td>
               </tr>
             )}
