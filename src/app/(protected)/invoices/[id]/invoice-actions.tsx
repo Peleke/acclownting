@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { createBrowserSupabaseClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 
 export function MarkAsSentButton({ invoiceId }: { invoiceId: string }) {
   const [loading, setLoading] = useState(false);
@@ -11,7 +11,7 @@ export function MarkAsSentButton({ invoiceId }: { invoiceId: string }) {
 
   async function handleMarkAsSent() {
     setLoading(true);
-    const supabase = createBrowserSupabaseClient();
+    const supabase = createClient();
     const { error } = await supabase
       .from('invoices')
       .update({ status: 'sent' })
@@ -41,7 +41,7 @@ export function PrintButton({ invoiceId }: { invoiceId: string }) {
   }
 
   return (
-    <Button variant="outline" onClick={handlePrint}>
+    <Button variant="ghost" onClick={handlePrint}>
       Print
     </Button>
   );
