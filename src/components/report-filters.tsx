@@ -8,8 +8,11 @@ import { Input } from '@/components/ui/input';
 export function ReportFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [startDate, setStartDate] = useState(searchParams.get('start') || '');
-  const [endDate, setEndDate] = useState(searchParams.get('end') || '');
+  const now = new Date();
+  const defaultStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  const defaultEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+  const [startDate, setStartDate] = useState(searchParams.get('start') || defaultStart);
+  const [endDate, setEndDate] = useState(searchParams.get('end') || defaultEnd);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

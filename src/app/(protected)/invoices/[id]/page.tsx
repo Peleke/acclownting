@@ -28,6 +28,20 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
   const totalPaid = payments?.reduce((sum, p) => sum + p.amount, 0) || 0;
   const balance = invoice.total - totalPaid;
 
+  // FR24: Auto-mark overdue on page load
+  const today = new Date().toISOString().split('T')[0];
+  if (
+    invoice.due_date &&
+    invoice.due_date < today &&
+    (invoice.status === 'sent' || invoice.status === 'partial')
+  ) {
+    await supabase
+      .from('invoices')
+      .update({ status: 'overdue' })
+      .eq('id', invoice.id);
+    invoice.status = 'overdue';
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">

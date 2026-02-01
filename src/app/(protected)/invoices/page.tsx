@@ -23,6 +23,24 @@ export default async function InvoicesPage({
 
   const { data: invoices } = await query;
 
+  // FR24: Auto-mark overdue invoices (sent/partial past due date)
+  if (invoices) {
+    const today = new Date().toISOString().split('T')[0];
+    for (const inv of invoices) {
+      if (
+        inv.due_date &&
+        inv.due_date < today &&
+        (inv.status === 'sent' || inv.status === 'partial')
+      ) {
+        await supabase
+          .from('invoices')
+          .update({ status: 'overdue' })
+          .eq('id', inv.id);
+        inv.status = 'overdue';
+      }
+    }
+  }
+
   const statuses = ['draft', 'sent', 'partial', 'paid', 'overdue'];
 
   return (
