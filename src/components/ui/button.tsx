@@ -1,37 +1,50 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-}
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-lg text-sm font-medium tracking-[-0.01em] transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none',
+  {
+    variants: {
+      variant: {
+        primary:
+          'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/95 shadow-soft hover:shadow-elevated',
+        secondary:
+          'bg-card text-foreground border border-border hover:bg-muted hover:border-border/80 active:bg-muted/80 shadow-soft',
+        danger:
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/95 shadow-soft',
+        ghost:
+          'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted/80',
+      },
+      size: {
+        sm: 'px-3 py-1.5 text-xs font-medium gap-1.5',
+        md: 'px-4 py-2 text-sm font-medium gap-2',
+        lg: 'px-5 py-2.5 text-sm font-medium gap-2',
+      },
+    },
+    defaultVariants: {
+      variant: 'primary',
+      size: 'md',
+    },
+  }
+);
 
-const variants = {
-  primary:
-    'bg-stone-900 text-white hover:bg-stone-800 active:bg-stone-950 shadow-soft hover:shadow-elevated',
-  secondary:
-    'bg-white text-stone-700 border border-stone-200 hover:bg-stone-50 hover:border-stone-300 active:bg-stone-100 shadow-soft',
-  danger:
-    'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-soft',
-  ghost:
-    'bg-transparent text-stone-600 hover:text-stone-900 hover:bg-stone-100 active:bg-stone-150',
-};
+interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
 
-const sizes = {
-  sm: 'px-3 py-1.5 text-xs font-medium gap-1.5',
-  md: 'px-4 py-2 text-sm font-medium gap-2',
-  lg: 'px-5 py-2.5 text-sm font-medium gap-2',
-};
-
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'primary', size = 'md', className = '', disabled, ...props }, ref) => {
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, ...props }, ref) => {
     return (
       <button
         ref={ref}
-        className={`inline-flex items-center justify-center rounded-lg tracking-[-0.01em] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none transition-all duration-150 ${variants[variant]} ${sizes[size]} ${className}`}
-        disabled={disabled}
+        className={cn(buttonVariants({ variant, size, className }))}
         {...props}
       />
     );
   }
 );
 Button.displayName = 'Button';
+
+export { Button, buttonVariants };
+export type { ButtonProps };

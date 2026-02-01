@@ -25,30 +25,30 @@ export default async function AdminUsersPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-stone-900 tracking-tight">User Management</h1>
+        <h1 className="text-xl font-semibold text-foreground tracking-tight">User Management</h1>
         <AdminUsersClient />
       </div>
-      <div className="bg-white rounded-xl border border-stone-200/60 shadow-card overflow-x-auto">
+      <div className="bg-card rounded-xl border border-border shadow-card overflow-x-auto">
         <table className="min-w-full">
           <thead>
-            <tr className="border-b border-stone-100">
-              <th className="px-5 py-3 text-left text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Name</th>
-              <th className="px-5 py-3 text-left text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Role</th>
-              <th className="px-5 py-3 text-left text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Created</th>
+            <tr className="border-b border-border/50">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Name</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Role</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Created</th>
             </tr>
           </thead>
           <tbody>
             {profiles?.map((p, idx) => (
-              <tr key={p.id} className={idx !== (profiles?.length ?? 0) - 1 ? 'border-b border-stone-100/80' : ''}>
-                <td className="px-5 py-3.5 text-sm text-stone-700 font-medium">{p.full_name}</td>
+              <tr key={p.id} className={idx !== (profiles?.length ?? 0) - 1 ? 'border-b border-border/30' : ''}>
+                <td className="px-5 py-3.5 text-sm text-foreground font-medium">{p.full_name}</td>
                 <td className="px-5 py-3.5 text-sm">
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium capitalize ${
-                    p.role === 'admin' ? 'bg-accent-50 text-accent-700' : 'bg-stone-100 text-stone-600'
+                    p.role === 'admin' ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
                   }`}>
                     {p.role}
                   </span>
                 </td>
-                <td className="px-5 py-3.5 text-sm text-stone-500">
+                <td className="px-5 py-3.5 text-sm text-muted-foreground">
                   {new Date(p.created_at).toLocaleDateString()}
                 </td>
               </tr>

@@ -44,16 +44,16 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-50/50">
+    <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-sm animate-slide-up">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-stone-900 tracking-tight">Acclownting</h1>
-          <p className="text-sm text-stone-400 mt-1">Sign in to your account</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">Acclownting</h1>
+          <p className="text-sm text-muted-foreground mt-1">Sign in to your account</p>
         </div>
-        <div className="bg-white rounded-2xl border border-stone-200/60 shadow-card p-8">
+        <div className="bg-card rounded-2xl border border-border shadow-card p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="text-sm text-red-700 bg-red-50 border border-red-100 px-3 py-2.5 rounded-lg">
+              <div className="text-sm text-destructive bg-destructive/10 border border-destructive/20 px-3 py-2.5 rounded-lg">
                 {error}
               </div>
             )}
@@ -64,9 +64,9 @@ export default function LoginPage() {
             </Button>
           </form>
         </div>
-        <p className="text-center text-sm text-stone-400 mt-6">
+        <p className="text-center text-sm text-muted-foreground mt-6">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-stone-900 font-medium hover:underline">
+          <Link href="/signup" className="text-primary font-medium hover:underline">
             Sign up
           </Link>
         </p>

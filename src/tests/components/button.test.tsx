@@ -15,17 +15,17 @@ describe('Button', () => {
 
   it('applies primary variant by default', () => {
     render(<Button>Primary</Button>);
-    expect(screen.getByRole('button').className).toContain('bg-stone-900');
+    expect(screen.getByRole('button').className).toContain('bg-primary');
   });
 
   it('applies danger variant classes', () => {
     render(<Button variant="danger">Delete</Button>);
-    expect(screen.getByRole('button').className).toContain('bg-red-600');
+    expect(screen.getByRole('button').className).toContain('bg-destructive');
   });
 
   it('applies secondary variant classes', () => {
     render(<Button variant="secondary">Cancel</Button>);
-    expect(screen.getByRole('button').className).toContain('border-stone-200');
+    expect(screen.getByRole('button').className).toContain('border-border');
   });
 
   it('applies ghost variant classes', () => {

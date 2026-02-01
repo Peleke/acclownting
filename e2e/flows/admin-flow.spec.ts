@@ -49,7 +49,7 @@ test.describe('Admin Flow', () => {
     await page.getByRole('button', { name: /send invite/i }).click();
 
     // Should show validation error
-    await expect(page.locator('.text-red-700').first()).toBeVisible();
+    await expect(page.locator('.text-destructive').first()).toBeVisible();
   });
 
   test('invite form submits to API endpoint', async ({ page }) => {

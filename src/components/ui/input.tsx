@@ -1,30 +1,38 @@
 import { InputHTMLAttributes, forwardRef } from 'react';
+import { cn } from '@/lib/utils';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className = '', id, ...props }, ref) => {
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ label, error, className, id, ...props }, ref) => {
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={id} className="block text-[13px] font-medium text-stone-600 mb-1.5">
+          <label htmlFor={id} className="block text-[13px] font-medium text-muted-foreground mb-1.5">
             {label}
           </label>
         )}
         <input
           ref={ref}
           id={id}
-          className={`block w-full rounded-lg border bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 shadow-soft focus:outline-none focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 transition-shadow ${
-            error ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' : 'border-stone-200 hover:border-stone-300'
-          } ${className}`}
+          className={cn(
+            'flex h-9 w-full rounded-lg border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 shadow-soft transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/20 focus-visible:border-ring',
+            error
+              ? 'border-destructive focus-visible:ring-destructive/20 focus-visible:border-destructive'
+              : 'border-input hover:border-input/80',
+            className
+          )}
           {...props}
         />
-        {error && <p className="mt-1.5 text-[13px] text-red-600">{error}</p>}
+        {error && <p className="mt-1.5 text-[13px] text-destructive">{error}</p>}
       </div>
     );
   }
 );
 Input.displayName = 'Input';
+
+export { Input };
+export type { InputProps };

@@ -57,7 +57,7 @@ export function AdminUsersClient() {
       <Modal open={showModal} onClose={() => setShowModal(false)} title="Invite User">
         <form onSubmit={handleInvite} className="space-y-4">
           {error && (
-            <div className="text-sm text-red-700 bg-red-50 border border-red-100 px-3 py-2.5 rounded-lg">
+            <div className="text-sm text-destructive bg-destructive/10 border border-destructive/20 px-3 py-2.5 rounded-lg">
               {error}
             </div>
           )}

@@ -12,15 +12,27 @@ import type { Client, LineItem } from '@/lib/types';
 
 interface InvoiceFormProps {
   clients: Client[];
+  defaultClientId?: string;
+  invoice?: {
+    id: string;
+    client_id: string;
+    due_date: string | null;
+    line_items: LineItem[];
+    tax_rate: number;
+    notes: string | null;
+  };
 }
 
 const emptyLineItem: LineItem = { description: '', quantity: 1, unit_price: 0, total: 0 };
 
-export function InvoiceForm({ clients }: InvoiceFormProps) {
+export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormProps) {
   const router = useRouter();
   const supabase = createClient();
-  const [lineItems, setLineItems] = useState<LineItem[]>([{ ...emptyLineItem }]);
-  const [taxRate, setTaxRate] = useState(0);
+  const isEdit = !!invoice;
+  const [lineItems, setLineItems] = useState<LineItem[]>(
+    invoice?.line_items?.length ? invoice.line_items : [{ ...emptyLineItem }]
+  );
+  const [taxRate, setTaxRate] = useState(invoice ? invoice.tax_rate * 100 : 0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
@@ -76,11 +88,19 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
       return;
     }
 
-    const { data: userData } = await supabase.auth.getUser();
-    const { error } = await supabase.from('invoices').insert({
-      ...result.data,
-      created_by: userData.user!.id,
-    });
+    let error;
+    if (isEdit) {
+      ({ error } = await supabase
+        .from('invoices')
+        .update(result.data)
+        .eq('id', invoice!.id));
+    } else {
+      const { data: userData } = await supabase.auth.getUser();
+      ({ error } = await supabase.from('invoices').insert({
+        ...result.data,
+        created_by: userData.user!.id,
+      }));
+    }
 
     if (error) {
       setErrors({ form: error.message });
@@ -88,14 +108,14 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
       return;
     }
 
-    router.push('/invoices');
+    router.push(isEdit ? `/invoices/${invoice!.id}` : '/invoices');
     router.refresh();
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {errors.form && (
-        <div className="text-sm text-red-700 bg-red-50 border border-red-100 px-3 py-2.5 rounded-lg">
+        <div className="text-sm text-destructive bg-destructive/10 border border-destructive/20 px-3 py-2.5 rounded-lg">
           {errors.form}
         </div>
       )}
@@ -105,6 +125,7 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
           id="client_id"
           name="client_id"
           label="Client"
+          defaultValue={invoice?.client_id || defaultClientId}
           options={clients.map((c) => ({ value: c.id, label: c.name }))}
           error={errors.client_id}
           required
@@ -114,28 +135,29 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
           name="due_date"
           label="Due Date"
           type="date"
+          defaultValue={invoice?.due_date || ''}
           error={errors.due_date}
         />
       </div>
 
       <div>
-        <h3 className="text-[13px] font-medium text-stone-600 mb-3">Line Items</h3>
-        <div className="rounded-xl border border-stone-200 overflow-hidden">
+        <h3 className="text-[13px] font-medium text-muted-foreground mb-3">Line Items</h3>
+        <div className="rounded-xl border border-border overflow-hidden">
           {/* Header */}
-          <div className="grid grid-cols-[1fr_5rem_7rem_6rem_2.5rem] gap-0 bg-stone-50 border-b border-stone-100 px-3 py-2">
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Description</span>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider text-right">Qty</span>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider text-right">Price</span>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider text-right">Total</span>
+          <div className="grid grid-cols-[1fr_5rem_7rem_6rem_2.5rem] gap-0 bg-muted border-b border-border/50 px-3 py-2">
+            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Description</span>
+            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider text-right">Qty</span>
+            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider text-right">Price</span>
+            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider text-right">Total</span>
             <span></span>
           </div>
           {/* Rows */}
           {lineItems.map((item, i) => (
-            <div key={i} className={`grid grid-cols-[1fr_5rem_7rem_6rem_2.5rem] gap-0 items-center px-3 py-2 ${i !== lineItems.length - 1 ? 'border-b border-stone-100' : ''}`}>
+            <div key={i} className={`grid grid-cols-[1fr_5rem_7rem_6rem_2.5rem] gap-0 items-center px-3 py-2 ${i !== lineItems.length - 1 ? 'border-b border-border/30' : ''}`}>
               <input
                 value={item.description}
                 onChange={(e) => updateLineItem(i, 'description', e.target.value)}
-                className="bg-transparent text-sm text-stone-900 placeholder:text-stone-300 focus:outline-none w-full pr-2"
+                className="bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none w-full pr-2"
                 placeholder="Item description"
                 required
               />
@@ -145,7 +167,7 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
                 step="1"
                 value={item.quantity}
                 onChange={(e) => updateLineItem(i, 'quantity', parseFloat(e.target.value) || 0)}
-                className="bg-transparent text-sm text-stone-700 text-right tabular-nums focus:outline-none w-full"
+                className="bg-transparent text-sm text-foreground/80 text-right tabular-nums focus:outline-none w-full"
                 required
               />
               <input
@@ -154,16 +176,16 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
                 step="0.01"
                 value={item.unit_price}
                 onChange={(e) => updateLineItem(i, 'unit_price', parseFloat(e.target.value) || 0)}
-                className="bg-transparent text-sm text-stone-700 text-right tabular-nums focus:outline-none w-full"
+                className="bg-transparent text-sm text-foreground/80 text-right tabular-nums focus:outline-none w-full"
                 required
               />
-              <div className="text-sm text-stone-700 text-right tabular-nums font-medium">
+              <div className="text-sm text-foreground/80 text-right tabular-nums font-medium">
                 {formatCurrency(item.total)}
               </div>
               <button
                 type="button"
                 onClick={() => removeLineItem(i)}
-                className="w-6 h-6 rounded-md flex items-center justify-center text-stone-300 hover:text-red-500 hover:bg-red-50 ml-auto"
+                className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 ml-auto"
                 disabled={lineItems.length === 1}
               >
                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -176,15 +198,15 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
         <button
           type="button"
           onClick={addLineItem}
-          className="mt-3 text-[13px] font-medium text-stone-400 hover:text-stone-600"
+          className="mt-3 text-[13px] font-medium text-muted-foreground hover:text-foreground"
         >
           + Add line item
         </button>
       </div>
 
-      <div className="flex flex-col items-end gap-2 p-4 bg-stone-50 rounded-xl border border-stone-100">
+      <div className="flex flex-col items-end gap-2 p-4 bg-muted rounded-xl border border-border/50">
         <div className="flex items-center gap-4 mb-2">
-          <span className="text-[13px] text-stone-500">Tax Rate (%)</span>
+          <span className="text-[13px] text-muted-foreground">Tax Rate (%)</span>
           <input
             type="number"
             min="0"
@@ -192,32 +214,33 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
             step="0.01"
             value={taxRate}
             onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
-            className="w-20 rounded-lg border border-stone-200 bg-white px-2.5 py-1.5 text-sm text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500"
+            className="w-20 rounded-lg border border-border bg-card px-2.5 py-1.5 text-sm text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring"
           />
         </div>
         <div className="flex justify-between w-48 text-sm">
-          <span className="text-stone-400">Subtotal</span>
-          <span className="tabular-nums text-stone-600">{formatCurrency(totals.subtotal)}</span>
+          <span className="text-muted-foreground">Subtotal</span>
+          <span className="tabular-nums text-foreground/70">{formatCurrency(totals.subtotal)}</span>
         </div>
         <div className="flex justify-between w-48 text-sm">
-          <span className="text-stone-400">Tax</span>
-          <span className="tabular-nums text-stone-600">{formatCurrency(totals.taxAmount)}</span>
+          <span className="text-muted-foreground">Tax</span>
+          <span className="tabular-nums text-foreground/70">{formatCurrency(totals.taxAmount)}</span>
         </div>
-        <div className="flex justify-between w-48 pt-2 mt-1 border-t border-stone-200">
-          <span className="text-sm font-semibold text-stone-900">Total</span>
-          <span className="text-sm font-semibold text-stone-900 tabular-nums">{formatCurrency(totals.total)}</span>
+        <div className="flex justify-between w-48 pt-2 mt-1 border-t border-border">
+          <span className="text-sm font-semibold text-foreground">Total</span>
+          <span className="text-sm font-semibold text-foreground tabular-nums">{formatCurrency(totals.total)}</span>
         </div>
       </div>
 
       <div>
-        <label htmlFor="notes" className="block text-[13px] font-medium text-stone-600 mb-1.5">
+        <label htmlFor="notes" className="block text-[13px] font-medium text-muted-foreground mb-1.5">
           Notes
         </label>
         <textarea
           id="notes"
           name="notes"
           rows={3}
-          className="block w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 shadow-soft hover:border-stone-300 focus:outline-none focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500 transition-shadow resize-none"
+          defaultValue={invoice?.notes || ''}
+          className="block w-full rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 shadow-soft hover:border-input/80 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring transition-shadow resize-none"
         />
       </div>
 
@@ -226,7 +249,7 @@ export function InvoiceForm({ clients }: InvoiceFormProps) {
           Cancel
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? 'Creating...' : 'Create Invoice'}
+          {loading ? (isEdit ? 'Saving...' : 'Creating...') : (isEdit ? 'Save Changes' : 'Create Invoice')}
         </Button>
       </div>
     </form>

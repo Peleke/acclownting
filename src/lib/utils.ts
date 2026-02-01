@@ -1,3 +1,10 @@
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -32,22 +39,22 @@ export function calculateInvoiceTotals(
 
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
-    draft: 'bg-stone-100 text-stone-600',
-    sent: 'bg-accent-50 text-accent-700',
-    partial: 'bg-amber-50 text-amber-800',
-    paid: 'bg-emerald-50 text-emerald-700',
-    overdue: 'bg-red-50 text-red-700',
+    draft: 'bg-status-draft-bg text-status-draft-text',
+    sent: 'bg-status-sent-bg text-status-sent-text',
+    partial: 'bg-status-partial-bg text-status-partial-text',
+    paid: 'bg-status-paid-bg text-status-paid-text',
+    overdue: 'bg-status-overdue-bg text-status-overdue-text',
   };
-  return colors[status] || 'bg-stone-100 text-stone-600';
+  return colors[status] || 'bg-status-draft-bg text-status-draft-text';
 }
 
 export function getStatusDot(status: string): string {
   const dots: Record<string, string> = {
-    draft: 'bg-stone-400',
-    sent: 'bg-accent-500',
-    partial: 'bg-amber-500',
-    paid: 'bg-emerald-500',
-    overdue: 'bg-red-500',
+    draft: 'bg-status-draft-dot',
+    sent: 'bg-status-sent-dot',
+    partial: 'bg-status-partial-dot',
+    paid: 'bg-status-paid-dot',
+    overdue: 'bg-status-overdue-dot',
   };
-  return dots[status] || 'bg-stone-400';
+  return dots[status] || 'bg-status-draft-dot';
 }
