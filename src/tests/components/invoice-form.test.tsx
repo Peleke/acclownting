@@ -137,4 +137,10 @@ describe('InvoiceForm', () => {
       expect(screen.getByRole('button', { name: 'Creating...' })).toBeDisabled();
     });
   });
+
+  it('pre-selects client when defaultClientId is provided', () => {
+    render(<InvoiceForm clients={clients} defaultClientId={MOCK_CLIENT_2.id} />);
+    const select = screen.getByLabelText('Client') as HTMLSelectElement;
+    expect(select.value).toBe(MOCK_CLIENT_2.id);
+  });
 });

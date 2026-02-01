@@ -45,3 +45,39 @@ test.describe('Clients Page', () => {
     await expect(page.getByText(/no clients match/i)).toBeVisible();
   });
 });
+
+test.describe('Client Detail Page', () => {
+  test('has New Invoice and Edit Client buttons', async ({ page }) => {
+    // Navigate to clients first, then try to find a client link
+    await page.goto('/clients');
+    const clientLink = page.locator('table a[href^="/clients/"]').first();
+    const hasClients = await clientLink.isVisible().catch(() => false);
+    if (hasClients) {
+      await clientLink.click();
+      await expect(page.getByRole('link', { name: /new invoice/i })).toBeVisible();
+      await expect(page.getByRole('button', { name: /edit client/i })).toBeVisible();
+    }
+  });
+
+  test('New Invoice link includes client_id param', async ({ page }) => {
+    await page.goto('/clients');
+    const clientLink = page.locator('table a[href^="/clients/"]').first();
+    const hasClients = await clientLink.isVisible().catch(() => false);
+    if (hasClients) {
+      await clientLink.click();
+      const newInvoiceLink = page.getByRole('link', { name: /new invoice/i });
+      const href = await newInvoiceLink.getAttribute('href');
+      expect(href).toMatch(/\/invoices\/new\?client_id=/);
+    }
+  });
+
+  test('has Payment History section', async ({ page }) => {
+    await page.goto('/clients');
+    const clientLink = page.locator('table a[href^="/clients/"]').first();
+    const hasClients = await clientLink.isVisible().catch(() => false);
+    if (hasClients) {
+      await clientLink.click();
+      await expect(page.getByText('Payment History')).toBeVisible();
+    }
+  });
+});
