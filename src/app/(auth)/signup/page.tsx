@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { loginSchema } from '@/lib/schemas';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
+import { signupSchema } from '@/lib/schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
   const supabase = createClient();
   const [error, setError] = useState('');
@@ -21,18 +21,26 @@ export default function LoginPage() {
 
     const formData = new FormData(e.currentTarget);
     const raw = {
+      full_name: formData.get('full_name') as string,
       email: formData.get('email') as string,
       password: formData.get('password') as string,
     };
 
-    const result = loginSchema.safeParse(raw);
+    const result = signupSchema.safeParse(raw);
     if (!result.success) {
       setError(result.error.issues[0].message);
       setLoading(false);
       return;
     }
 
-    const { error: authError } = await supabase.auth.signInWithPassword(result.data);
+    const { error: authError } = await supabase.auth.signUp({
+      email: result.data.email,
+      password: result.data.password,
+      options: {
+        data: { full_name: result.data.full_name },
+      },
+    });
+
     if (authError) {
       setError(authError.message);
       setLoading(false);
@@ -48,7 +56,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm animate-slide-up">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-stone-900 tracking-tight">Acclownting</h1>
-          <p className="text-sm text-stone-400 mt-1">Sign in to your account</p>
+          <p className="text-sm text-stone-400 mt-1">Create your account</p>
         </div>
         <div className="bg-white rounded-2xl border border-stone-200/60 shadow-card p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -57,17 +65,18 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
+            <Input id="full_name" name="full_name" label="Full Name" required />
             <Input id="email" name="email" label="Email" type="email" required />
             <Input id="password" name="password" label="Password" type="password" required />
             <Button type="submit" className="w-full" size="lg" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? 'Creating account...' : 'Sign Up'}
             </Button>
           </form>
         </div>
         <p className="text-center text-sm text-stone-400 mt-6">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-stone-900 font-medium hover:underline">
-            Sign up
+          Already have an account?{' '}
+          <Link href="/login" className="text-stone-900 font-medium hover:underline">
+            Sign in
           </Link>
         </p>
       </div>
