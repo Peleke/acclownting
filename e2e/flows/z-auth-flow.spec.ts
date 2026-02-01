@@ -52,7 +52,7 @@ test.describe('Auth Flow (real Supabase)', () => {
     await page.locator('button[type="submit"]').click();
 
     // Should show an error message (Supabase returns "Invalid login credentials")
-    await expect(page.locator('.text-red-600')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('.text-red-700')).toBeVisible({ timeout: 10000 });
     // Should still be on login page
     await expect(page).toHaveURL(/\/login/);
   });

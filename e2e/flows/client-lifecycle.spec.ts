@@ -86,7 +86,7 @@ test.describe('Client Lifecycle', () => {
     await expect(page.getByRole('button', { name: /edit client/i })).toBeVisible();
 
     // Should show invoices section (empty for now)
-    await expect(page.getByText('Invoices')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Invoices' })).toBeVisible();
     await expect(page.getByText('No invoices for this client yet.')).toBeVisible();
   });
 
