@@ -11,7 +11,7 @@ export default async function ProtectedLayout({
   if (process.env.BYPASS_AUTH === 'true') {
     const mockProfile = { id: 'e2e-user', full_name: 'E2E Test User', role: 'admin' as const, created_at: '' };
     return (
-      <div className="min-h-screen bg-stone-50/50">
+      <div className="min-h-screen bg-background">
         <Nav profile={mockProfile} />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
           {children}
@@ -34,7 +34,7 @@ export default async function ProtectedLayout({
     .single();
 
   return (
-    <div className="min-h-screen bg-stone-50/50">
+    <div className="min-h-screen bg-background">
       <Nav profile={profile} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
         {children}

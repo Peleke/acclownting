@@ -24,11 +24,11 @@ export function Nav({ profile }: { profile: Profile | null }) {
   }
 
   return (
-    <nav className="bg-white/80 backdrop-blur-xl border-b border-stone-200/60 sticky top-0 z-50">
+    <nav className="bg-card/80 backdrop-blur-xl border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between">
           <div className="flex items-center gap-1">
-            <Link href="/dashboard" className="text-[15px] font-bold text-stone-900 tracking-tight mr-6">
+            <Link href="/dashboard" className="text-[15px] font-bold text-foreground tracking-tight mr-6">
               Acclownting
             </Link>
             <div className="flex items-center gap-0.5">
@@ -40,8 +40,8 @@ export function Nav({ profile }: { profile: Profile | null }) {
                     href={link.href}
                     className={`px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all ${
                       isActive
-                        ? 'text-stone-900 bg-stone-100'
-                        : 'text-stone-500 hover:text-stone-700 hover:bg-stone-50'
+                        ? 'text-primary bg-primary/10'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                     }`}
                   >
                     {link.label}
@@ -53,8 +53,8 @@ export function Nav({ profile }: { profile: Profile | null }) {
                   href="/admin/users"
                   className={`px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all ${
                     pathname.startsWith('/admin')
-                      ? 'text-stone-900 bg-stone-100'
-                      : 'text-stone-500 hover:text-stone-700 hover:bg-stone-50'
+                      ? 'text-primary bg-primary/10'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                   }`}
                 >
                   Admin
@@ -63,11 +63,11 @@ export function Nav({ profile }: { profile: Profile | null }) {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-[13px] text-stone-500 font-medium">{profile?.full_name}</span>
-            <div className="w-px h-4 bg-stone-200" />
+            <span className="text-[13px] text-muted-foreground font-medium">{profile?.full_name}</span>
+            <div className="w-px h-4 bg-border" />
             <button
               onClick={handleSignOut}
-              className="text-[13px] text-stone-400 hover:text-stone-600 font-medium"
+              className="text-[13px] text-muted-foreground/70 hover:text-foreground font-medium"
             >
               Sign Out
             </button>
