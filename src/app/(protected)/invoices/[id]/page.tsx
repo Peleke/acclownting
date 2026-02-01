@@ -5,6 +5,7 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
 import { InvoiceDetailClient } from './invoice-detail-client';
+import { MarkAsSentButton, PrintButton } from './invoice-actions';
 
 export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -43,9 +44,15 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
             </Link>
           </p>
         </div>
-        <a href={`/api/invoices/${id}/pdf`} target="_blank" rel="noopener">
-          <Button variant="secondary">Download PDF</Button>
-        </a>
+        <div className="flex items-center gap-2">
+          {invoice.status === 'draft' && (
+            <MarkAsSentButton invoiceId={invoice.id} />
+          )}
+          <PrintButton invoiceId={invoice.id} />
+          <a href={`/api/invoices/${id}/pdf`} target="_blank" rel="noopener">
+            <Button variant="secondary">Download PDF</Button>
+          </a>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
