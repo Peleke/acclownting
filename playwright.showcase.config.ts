@@ -28,8 +28,12 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'showcase',
+      name: 'showcase-desktop',
       use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800 } },
+    },
+    {
+      name: 'showcase-mobile',
+      use: { ...devices['iPhone 14'], viewport: { width: 390, height: 844 } },
     },
   ],
   webServer: {
