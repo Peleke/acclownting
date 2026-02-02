@@ -18,13 +18,23 @@ export default async function ReportsPage({
   const effectiveStart = start || defaultStart;
   const effectiveEnd = end || defaultEnd;
 
-  const { data: reportData } = await supabase.rpc('get_revenue_report', {
+  const { data: reportData, error: reportError } = await supabase.rpc('get_revenue_report', {
     start_date: effectiveStart,
     end_date: effectiveEnd,
   });
+  
+  if (reportError) {
+    console.error('Error fetching revenue report:', reportError);
+  }
+  
   const report = reportData?.[0] || null;
 
-  const { data: balanceData } = await supabase.rpc('get_client_balances');
+  const { data: balanceData, error: balanceError } = await supabase.rpc('get_client_balances');
+  
+  if (balanceError) {
+    console.error('Error fetching client balances:', balanceError);
+  }
+  
   const balances = balanceData;
 
   // FR31: Identify clients with overdue invoices for visual flagging
