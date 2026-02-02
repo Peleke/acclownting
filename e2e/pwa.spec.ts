@@ -8,9 +8,10 @@ test.describe('PWA: Manifest and Meta Tags', () => {
     expect(manifest.name).toBe('Acclownting');
     expect(manifest.display).toBe('standalone');
     expect(manifest.theme_color).toBe('#2274A5');
-    expect(manifest.icons).toHaveLength(2);
+    expect(manifest.icons).toHaveLength(3);
     expect(manifest.icons[0].sizes).toBe('192x192');
     expect(manifest.icons[1].sizes).toBe('512x512');
+    expect(manifest.icons[2].sizes).toBe('180x180');
   });
 
   test('HTML head includes manifest link', async ({ page }) => {
