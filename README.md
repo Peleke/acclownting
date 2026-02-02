@@ -12,9 +12,9 @@
 
 **Create invoices. Post payments. Run reports. That's it.**
 
-[![Live App](https://img.shields.io/badge/Live_App-acclownting.vercel.app-black?style=for-the-badge&logo=vercel&logoColor=white)](https://acclownting.vercel.app)
-
 <img src="assets/hero-banner.png" alt="acclownting — Invoicing for Humans Who Just Want It to Work" width="800"/>
+
+[![Live App](https://img.shields.io/badge/Live_App-acclownting.vercel.app-black?style=for-the-badge&logo=vercel&logoColor=white)](https://acclownting.vercel.app)
 
 [Get Started](#quick-start) · [Features](#features) · [Architecture](#architecture) · [Contributing](#contributing)
 
