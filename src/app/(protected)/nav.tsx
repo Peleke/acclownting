@@ -35,8 +35,15 @@ export function Nav({ profile }: { profile: Profile | null }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between">
           <div className="flex items-center gap-1">
-            <Link href="/dashboard" className="text-[15px] font-bold text-foreground tracking-tight mr-6">
-              Acclownting
+            <Link href="/dashboard" className="flex items-center gap-2 mr-6">
+              <img
+                src="/icon-192x192.png"
+                alt=""
+                width={28}
+                height={28}
+                className="rounded-full"
+              />
+              <span className="text-[15px] font-bold text-foreground tracking-tight">Acclownting</span>
             </Link>
             <div className="hidden md:flex items-center gap-0.5">
               {allLinks.map((link) => {
