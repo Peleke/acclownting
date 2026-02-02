@@ -80,4 +80,37 @@ test.describe('Client Detail Page', () => {
       await expect(page.getByText('Payment History')).toBeVisible();
     }
   });
+
+  test('can edit client and changes persist', async ({ page }) => {
+    await page.goto('/clients');
+    const clientLink = page.locator('table a[href^="/clients/"]').first();
+    const hasClients = await clientLink.isVisible().catch(() => false);
+    
+    if (hasClients) {
+      // Get original client name from the list
+      const originalName = await clientLink.textContent();
+      
+      // Navigate to client detail
+      await clientLink.click();
+      await expect(page.getByRole('button', { name: /edit client/i })).toBeVisible();
+      
+      // Open edit modal
+      await page.getByRole('button', { name: /edit client/i }).click();
+      
+      // Update the name
+      const nameInput = page.locator('input[name="name"]');
+      await nameInput.clear();
+      const updatedName = `${originalName} - Updated`;
+      await nameInput.fill(updatedName);
+      
+      // Submit form
+      await page.locator('form button[type="submit"]').click();
+      
+      // Wait for modal to close and page to refresh
+      await page.waitForTimeout(500);
+      
+      // Verify the updated name is displayed
+      await expect(page.locator('h1, h2, [role="heading"]').filter({ hasText: updatedName }).first()).toBeVisible();
+    }
+  });
 });
