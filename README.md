@@ -7,7 +7,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js_15-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-[![CI](https://img.shields.io/github/actions/workflow/status/Peleke/acclownting/ci.yml?branch=main&style=for-the-badge&logo=github&label=CI)](https://github.com/Peleke/acclownting/actions/workflows/ci.yml)
+[![CI](https://github.com/Peleke/acclownting/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Peleke/acclownting/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 **Create invoices. Post payments. Run reports. That's it.**
