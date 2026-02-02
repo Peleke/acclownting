@@ -47,3 +47,5 @@ showcase-report/
 
 # Supabase CLI temp files
 supabase/.temp/
+showcase-artifacts/
+test-results/
