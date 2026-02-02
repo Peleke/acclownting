@@ -25,6 +25,17 @@ interface InvoiceFormProps {
 
 const emptyLineItem: LineItem = { description: '', quantity: 1, unit_price: 0, total: 0 };
 
+// Raw string state for numeric inputs so users can clear fields and type decimals
+interface LineItemStrings {
+  quantity: string;
+  unit_price: string;
+}
+
+function parseNum(v: string): number {
+  const n = parseFloat(v);
+  return isNaN(n) ? 0 : n;
+}
+
 export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormProps) {
   const router = useRouter();
   const supabase = createClient();
@@ -32,7 +43,14 @@ export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormPr
   const [lineItems, setLineItems] = useState<LineItem[]>(
     invoice?.line_items?.length ? invoice.line_items : [{ ...emptyLineItem }]
   );
-  const [taxRate, setTaxRate] = useState(invoice ? invoice.tax_rate * 100 : 0);
+  const [lineItemStrings, setLineItemStrings] = useState<LineItemStrings[]>(() =>
+    (invoice?.line_items?.length ? invoice.line_items : [emptyLineItem]).map((item) => ({
+      quantity: String(item.quantity),
+      unit_price: String(item.unit_price),
+    }))
+  );
+  const [taxRateStr, setTaxRateStr] = useState(invoice ? String(invoice.tax_rate * 100) : '0');
+  const taxRate = parseNum(taxRateStr);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
@@ -41,20 +59,31 @@ export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormPr
   function updateLineItem(index: number, field: keyof LineItem, value: string | number) {
     setLineItems((prev) => {
       const items = [...prev];
-      const item = { ...items[index], [field]: value };
+      const item = { ...items[index], [field]: field === 'description' ? value : parseNum(String(value)) };
       item.total = calculateLineItemTotal(item.quantity, item.unit_price);
       items[index] = item;
       return items;
     });
   }
 
+  function updateLineItemString(index: number, field: 'quantity' | 'unit_price', value: string) {
+    setLineItemStrings((prev) => {
+      const items = [...prev];
+      items[index] = { ...items[index], [field]: value };
+      return items;
+    });
+    updateLineItem(index, field, value);
+  }
+
   function addLineItem() {
     setLineItems((prev) => [...prev, { ...emptyLineItem }]);
+    setLineItemStrings((prev) => [...prev, { quantity: '1', unit_price: '0' }]);
   }
 
   function removeLineItem(index: number) {
     if (lineItems.length === 1) return;
     setLineItems((prev) => prev.filter((_, i) => i !== index));
+    setLineItemStrings((prev) => prev.filter((_, i) => i !== index));
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -174,8 +203,8 @@ export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormPr
                       type="number"
                       min="1"
                       step="1"
-                      value={item.quantity}
-                      onChange={(e) => updateLineItem(i, 'quantity', parseFloat(e.target.value) || 0)}
+                      value={lineItemStrings[i]?.quantity ?? ''}
+                      onChange={(e) => updateLineItemString(i, 'quantity', e.target.value)}
                       className="bg-transparent text-sm text-foreground/80 md:text-right tabular-nums focus:outline-none w-full"
                       required
                     />
@@ -186,8 +215,8 @@ export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormPr
                       type="number"
                       min="0"
                       step="0.01"
-                      value={item.unit_price}
-                      onChange={(e) => updateLineItem(i, 'unit_price', parseFloat(e.target.value) || 0)}
+                      value={lineItemStrings[i]?.unit_price ?? ''}
+                      onChange={(e) => updateLineItemString(i, 'unit_price', e.target.value)}
                       className="bg-transparent text-sm text-foreground/80 md:text-right tabular-nums focus:outline-none w-full"
                       required
                     />
@@ -230,8 +259,8 @@ export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormPr
             min="0"
             max="100"
             step="0.01"
-            value={taxRate}
-            onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
+            value={taxRateStr}
+            onChange={(e) => setTaxRateStr(e.target.value)}
             className="w-20 rounded-lg border border-border bg-card px-2.5 py-1.5 text-sm text-foreground text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring"
           />
         </div>

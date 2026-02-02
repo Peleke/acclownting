@@ -95,6 +95,34 @@ describe('InvoiceForm', () => {
     expect(taxInput?.className).toContain('text-foreground');
   });
 
+  it('allows clearing numeric fields without snapping to zero', () => {
+    render(<InvoiceForm clients={clients} />);
+    const numberInputs = screen.getAllByRole('spinbutton');
+    const qtyInput = numberInputs[0] as HTMLInputElement;
+    const priceInput = numberInputs[1] as HTMLInputElement;
+
+    // Clear quantity
+    fireEvent.change(qtyInput, { target: { value: '' } });
+    expect(qtyInput.value).toBe('');
+
+    // Clear price
+    fireEvent.change(priceInput, { target: { value: '' } });
+    expect(priceInput.value).toBe('');
+
+    // Type a decimal value
+    fireEvent.change(priceInput, { target: { value: '1.5' } });
+    expect(priceInput.value).toBe('1.5');
+  });
+
+  it('allows clearing tax rate field', () => {
+    render(<InvoiceForm clients={clients} />);
+    const numberInputs = screen.getAllByRole('spinbutton');
+    // Tax rate is the last spinbutton
+    const taxInput = numberInputs[numberInputs.length - 1] as HTMLInputElement;
+    fireEvent.change(taxInput, { target: { value: '' } });
+    expect(taxInput.value).toBe('');
+  });
+
   it('updates line item total when values change', async () => {
     render(<InvoiceForm clients={clients} />);
     const numberInputs = screen.getAllByRole('spinbutton');
