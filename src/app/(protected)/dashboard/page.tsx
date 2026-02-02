@@ -9,12 +9,20 @@ export default async function DashboardPage() {
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
   const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
 
-  const { data: report } = await supabase.rpc('get_revenue_report', {
+  const { data: report, error: reportError } = await supabase.rpc('get_revenue_report', {
     start_date: startOfMonth,
     end_date: endOfMonth,
   });
+  
+  if (reportError) {
+    console.error('Error fetching revenue report:', reportError);
+  }
 
-  const { data: balances } = await supabase.rpc('get_client_balances');
+  const { data: balances, error: balanceError } = await supabase.rpc('get_client_balances');
+  
+  if (balanceError) {
+    console.error('Error fetching client balances:', balanceError);
+  }
 
   const totalOwed = balances?.reduce((sum: number, b: { balance: number }) => sum + b.balance, 0) || 0;
 
