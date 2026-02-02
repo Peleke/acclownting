@@ -56,4 +56,15 @@ describe('Modal', () => {
     );
     expect(screen.getByLabelText('Close')).toBeInTheDocument();
   });
+
+  it('applies theme-aware background and text colors', () => {
+    render(
+      <Modal open={true} onClose={() => {}} title="Test">
+        Content
+      </Modal>
+    );
+    const dialog = document.querySelector('dialog')!;
+    expect(dialog.className).toContain('bg-card');
+    expect(dialog.className).toContain('text-card-foreground');
+  });
 });

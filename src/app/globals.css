@@ -67,6 +67,7 @@
 
   /* Dark theme */
   [data-theme="dark"] {
+    color-scheme: dark;
     --background: 222 20% 10%;
     --foreground: 210 20% 90%;
     --card: 222 18% 14%;

@@ -87,6 +87,14 @@ describe('InvoiceForm', () => {
     expect(screen.getByRole('button', { name: 'Create Invoice' })).toBeInTheDocument();
   });
 
+  it('applies theme-aware text color to tax rate input', () => {
+    render(<InvoiceForm clients={clients} />);
+    const taxInput = screen.getAllByRole('spinbutton').find(
+      (el) => el.closest('.flex.items-center.gap-4')
+    );
+    expect(taxInput?.className).toContain('text-foreground');
+  });
+
   it('updates line item total when values change', async () => {
     render(<InvoiceForm clients={clients} />);
     const numberInputs = screen.getAllByRole('spinbutton');

@@ -232,7 +232,7 @@ export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormPr
             step="0.01"
             value={taxRate}
             onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
-            className="w-20 rounded-lg border border-border bg-card px-2.5 py-1.5 text-sm text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring"
+            className="w-20 rounded-lg border border-border bg-card px-2.5 py-1.5 text-sm text-foreground text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring"
           />
         </div>
         <div className="flex justify-between w-48 text-sm">

@@ -43,4 +43,10 @@ describe('Select', () => {
     expect(firstOption.value).toBe('');
     expect(firstOption.textContent).toBe('Select...');
   });
+
+  it('uses currentColor for dropdown arrow to support dark mode', () => {
+    render(<Select id="test" options={options} />);
+    const select = screen.getByRole('combobox');
+    expect(select.className).toContain('currentColor');
+  });
 });
