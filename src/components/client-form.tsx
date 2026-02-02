@@ -58,8 +58,11 @@ export function ClientForm({ client, onSuccess }: ClientFormProps) {
       return;
     }
 
-    if (onSuccess) onSuccess();
+    // Refresh the page to reflect changes, then close the modal
     router.refresh();
+    // Give router.refresh() a moment to complete before closing modal
+    await new Promise(resolve => setTimeout(resolve, 100));
+    if (onSuccess) onSuccess();
     setLoading(false);
   }
 

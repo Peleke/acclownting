@@ -109,9 +109,23 @@ describe('InvoiceForm', () => {
     fireEvent.change(priceInput, { target: { value: '' } });
     expect(priceInput.value).toBe('');
 
-    // Type a decimal value
+    // Type a decimal value in price
     fireEvent.change(priceInput, { target: { value: '1.5' } });
     expect(priceInput.value).toBe('1.5');
+  });
+
+  it('allows decimal quantity values like 1.5', () => {
+    render(<InvoiceForm clients={clients} />);
+    const numberInputs = screen.getAllByRole('spinbutton');
+    const qtyInput = numberInputs[0] as HTMLInputElement;
+
+    // Type a decimal quantity
+    fireEvent.change(qtyInput, { target: { value: '1.5' } });
+    expect(qtyInput.value).toBe('1.5');
+
+    // Type another decimal quantity
+    fireEvent.change(qtyInput, { target: { value: '2.25' } });
+    expect(qtyInput.value).toBe('2.25');
   });
 
   it('allows clearing tax rate field', () => {
