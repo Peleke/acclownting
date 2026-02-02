@@ -73,7 +73,7 @@ test.describe('PDF Generation Flow', () => {
     await page.goto(`/invoices/${invoiceId}`);
     const pdfButton = page.getByRole('link', { name: /download pdf/i }).or(
       page.getByRole('button', { name: /download pdf/i })
-    );
+    ).first();
     await expect(pdfButton).toBeVisible();
   });
 
@@ -93,7 +93,7 @@ test.describe('PDF Generation Flow', () => {
     // Click the PDF download link/button
     const pdfLink = page.getByRole('link', { name: /download pdf/i }).or(
       page.getByRole('button', { name: /download pdf/i })
-    );
+    ).first();
     await pdfLink.click();
 
     // Either a download event or a successful API response confirms PDF generation

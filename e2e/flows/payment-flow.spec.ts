@@ -97,7 +97,7 @@ test.describe('Payment Flow', () => {
 
     // Status should have changed to "partial" (if the DB trigger is working)
     // The status badge is in the header area
-    await expect(page.getByText('partial')).toBeVisible();
+    await expect(page.locator('span.capitalize', { hasText: 'partial' })).toBeVisible();
 
     // Payment form should still be visible (balance > 0)
     await expect(page.getByRole('heading', { name: 'Record Payment' })).toBeVisible();
@@ -131,7 +131,7 @@ test.describe('Payment Flow', () => {
     await expect(page.getByText('Balance Due: $0.00')).toBeVisible();
 
     // Status should now be "paid"
-    await expect(page.getByText('paid')).toBeVisible();
+    await expect(page.locator('span.capitalize', { hasText: 'paid' })).toBeVisible();
 
     // Payment form should NOT be visible (balance === 0)
     await expect(page.locator('input[name="amount"]')).not.toBeVisible();
