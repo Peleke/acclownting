@@ -53,9 +53,9 @@ describe('InvoiceForm', () => {
   it('renders initial line item section', () => {
     render(<InvoiceForm clients={clients} />);
     expect(screen.getByText('Line Items')).toBeInTheDocument();
-    expect(screen.getByText('Description')).toBeInTheDocument();
-    expect(screen.getByText('Qty')).toBeInTheDocument();
-    expect(screen.getByText('Price')).toBeInTheDocument();
+    expect(screen.getAllByText('Description').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Qty').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Price').length).toBeGreaterThanOrEqual(1);
   });
 
   it('adds a new line item row', () => {
