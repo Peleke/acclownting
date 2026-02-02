@@ -142,7 +142,7 @@ test.describe('Invoice Status Lifecycle', () => {
     await page.goto(`/invoices/${overdueInvoiceId}`);
 
     // Should display "overdue" status (either automatically or after page load triggers check)
-    const badge = page.locator('.capitalize', { hasText: 'overdue' });
+    const badge = page.locator('span.capitalize', { hasText: 'overdue' });
     await expect(badge).toBeVisible({ timeout: 10000 });
     const className = await badge.getAttribute('class');
     expect(className).toContain('status-overdue');
@@ -176,7 +176,7 @@ test.describe('Invoice Status Lifecycle', () => {
     // Collect all unique status class patterns
     const statusClasses = new Set<string>();
 
-    const badges = page.locator('.capitalize');
+    const badges = page.locator('span.capitalize');
     const badgeCount = await badges.count();
 
     for (let i = 0; i < badgeCount; i++) {

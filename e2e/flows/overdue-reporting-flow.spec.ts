@@ -126,7 +126,7 @@ test.describe('Overdue Flagging in Reports', () => {
     const clientRow = page.locator('tr', { hasText: prefix });
     if (await clientRow.isVisible()) {
       // Verify the balance amount is shown
-      await expect(clientRow.getByText('$2,500.00').or(clientRow.getByText('$2,000.00'))).toBeVisible();
+      await expect(clientRow.getByText('$2,500.00').first().or(clientRow.getByText('$2,000.00').first())).toBeVisible();
     }
   });
 });
