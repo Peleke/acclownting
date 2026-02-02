@@ -100,7 +100,7 @@ test.describe('Invoice Status Lifecycle', () => {
     await page.goto(`/invoices/${draftInvoiceId}`);
 
     // Status badge should show "draft" with correct styling
-    const badge = page.locator('.capitalize', { hasText: 'draft' });
+    const badge = page.locator('span.capitalize', { hasText: 'draft' });
     await expect(badge).toBeVisible();
     // Verify visual distinction (color-coded per FR26)
     const className = await badge.getAttribute('class');
@@ -111,7 +111,7 @@ test.describe('Invoice Status Lifecycle', () => {
     test.skip(!hasAdminClient, 'Admin client not configured');
     await page.goto(`/invoices/${sentInvoiceId}`);
 
-    const badge = page.locator('.capitalize', { hasText: 'sent' });
+    const badge = page.locator('span.capitalize', { hasText: 'sent' });
     await expect(badge).toBeVisible();
     const className = await badge.getAttribute('class');
     expect(className).toContain('status-sent');
@@ -128,7 +128,7 @@ test.describe('Invoice Status Lifecycle', () => {
     await markSentBtn.click();
 
     // Status should change to "sent"
-    await expect(page.locator('.capitalize', { hasText: 'sent' })).toBeVisible();
+    await expect(page.locator('span.capitalize', { hasText: 'sent' })).toBeVisible();
 
     // "Mark as Sent" button should no longer be visible
     await expect(markSentBtn).not.toBeVisible();
@@ -154,14 +154,14 @@ test.describe('Invoice Status Lifecycle', () => {
     // Check draft filter
     await page.goto('/invoices?status=draft');
     // All visible status badges should be "draft"
-    const draftBadges = page.locator('.capitalize', { hasText: 'draft' });
+    const draftBadges = page.locator('span.capitalize', { hasText: 'draft' });
     const count = await draftBadges.count();
     // Should have at least our test invoice (or zero if it was marked sent in previous test)
     expect(count).toBeGreaterThanOrEqual(0);
 
     // Check sent filter
     await page.goto('/invoices?status=sent');
-    const sentBadges = page.locator('.capitalize', { hasText: 'sent' });
+    const sentBadges = page.locator('span.capitalize', { hasText: 'sent' });
     const sentCount = await sentBadges.count();
     expect(sentCount).toBeGreaterThanOrEqual(1); // At least our seeded sent invoice
   });

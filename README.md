@@ -7,14 +7,14 @@
 [![Next.js](https://img.shields.io/badge/Next.js_15-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-[![CI](https://img.shields.io/github/actions/workflow/status/Peleke/acclownting/ci.yml?branch=main&style=for-the-badge&logo=github&label=CI)](https://github.com/Peleke/acclownting/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/Peleke/acclownting/ci.yml?branch=main&style=for-the-badge&logo=github&label=CI)](https://github.com/Peleke/acclownting/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 **Create invoices. Post payments. Run reports. That's it.**
 
 <img src="assets/hero-banner.png" alt="acclownting — Invoicing for Humans Who Just Want It to Work" width="800"/>
 
-[Get Started](#-quick-start) · [Features](#-features) · [Architecture](#-architecture) · [Contributing](#-contributing)
+[Get Started](#quick-start) · [Features](#features) · [Architecture](#architecture) · [Contributing](#contributing)
 
 ---
 
@@ -60,17 +60,15 @@ Admin users invite new members. Self-service signup available. Session-based aut
 
 ---
 
-## Screenshots
+## Screenshots & Videos
 
-<div align="center">
+See **[SHOWCASE.md](./SHOWCASE.md)** for full screenshots, recorded videos, and a traceability matrix mapping every recording back to the original requirements.
 
-| Dashboard | Invoice Detail | PDF Output |
-|:---:|:---:|:---:|
-| *Balances at a glance* | *Line items, payments, status* | *Clean printable PDF* |
+To regenerate recordings locally:
 
-> *Screenshots coming soon*
-
-</div>
+```bash
+npx playwright test --config playwright.showcase.config.ts
+```
 
 ---
 
@@ -86,36 +84,25 @@ Admin users invite new members. Self-service signup available. Session-based aut
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Client (Browser)                       │
-│       Next.js 15 · React 19 · TypeScript · Tailwind     │
-└───────────────────────────┬─────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                 API Layer (Next.js App Router)            │
-│         Server Components · Route Handlers · RSC         │
-└───────────────────────────┬─────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                     Supabase                             │
-│     PostgreSQL · Auth · RLS · RPC · Storage              │
-└─────────────────────────────────────────────────────────┘
-```
+```mermaid
+graph TD
+    Browser["Browser<br/><sub>React 19 · TypeScript · Tailwind CSS</sub>"]
+    AppRouter["Next.js 15 App Router<br/><sub>Server Components · Route Handlers</sub>"]
+    Supabase["Supabase<br/><sub>PostgreSQL · Auth · RLS · RPC</sub>"]
+    PDF["@react-pdf/renderer<br/><sub>Server-side PDF generation</sub>"]
+    Zod["Zod<br/><sub>Runtime validation</sub>"]
 
-### Tech Stack
+    Browser -->|"RSC + Client Components"| AppRouter
+    AppRouter -->|"Reads (server) · Writes (client)"| Supabase
+    AppRouter -->|"GET /api/invoices/:id/pdf"| PDF
+    Browser -->|"Form validation"| Zod
 
-| Layer | Technology | Why |
-|-------|------------|-----|
-| **Frontend** | Next.js 15, React 19, TypeScript | App Router, RSC, streaming |
-| **Styling** | Tailwind CSS | Utility-first, fast iteration |
-| **Database** | Supabase PostgreSQL | RLS, managed auth, RPC functions |
-| **PDF** | @react-pdf/renderer | Server-side PDF generation |
-| **Validation** | Zod | Runtime type safety at system boundaries |
-| **Testing** | Vitest + Playwright | 181 unit/integration + 45 E2E tests |
-| **CI/CD** | GitHub Actions + Vercel | Automated typecheck, lint, test, deploy |
+    style Browser fill:#0075DD,color:#fff,stroke:none
+    style AppRouter fill:#000,color:#fff,stroke:none
+    style Supabase fill:#3FCF8E,color:#fff,stroke:none
+    style PDF fill:#FFC414,color:#1A1A1A,stroke:none
+    style Zod fill:#3068B7,color:#fff,stroke:none
+```
 
 ---
 
@@ -191,7 +178,8 @@ acclownting/
 │       ├── unit/                # Schema + utility tests
 │       └── helpers/             # Test mocks and fixtures
 ├── e2e/                         # Playwright E2E tests
-│   └── flows/                   # Multi-page user flow tests
+│   ├── flows/                   # Multi-page user flow tests
+│   └── showcase/                # Video + screenshot recordings
 └── supabase/                    # DB schema + seed data
 ```
 
@@ -208,39 +196,14 @@ npm run typecheck        # TypeScript strict checking
 
 # Testing
 npx vitest run           # Run 181 unit/integration tests
-npx playwright test      # Run 45 E2E smoke + flow tests
+npx playwright test      # Run 45 E2E smoke tests
+
+# Showcase recordings
+npx playwright test --config playwright.showcase.config.ts
 
 # All checks (what CI runs)
 npm run typecheck && npm run lint && npx vitest run && npx playwright test
 ```
-
----
-
-## Design Decisions
-
-<details>
-<summary><strong>Client-Side Supabase for Mutations</strong></summary>
-
-Forms use the browser Supabase client for inserts/updates. Server components handle reads. This keeps mutations simple (no server actions or API routes for basic CRUD) while server components get the SEO and performance benefits of RSC.
-</details>
-
-<details>
-<summary><strong>Auto-Overdue Detection on Page Load</strong></summary>
-
-Instead of a database cron job, overdue detection runs when invoice pages load. Pragmatic for the scale this app targets (small businesses, not enterprise). Trades slight latency for zero infrastructure.
-</details>
-
-<details>
-<summary><strong>BYPASS_AUTH for E2E Testing</strong></summary>
-
-Smoke tests run against the UI with auth bypassed via middleware. Flow tests (payments, status transitions, PDF generation) run against real Supabase. This gives fast CI feedback without sacrificing integration confidence.
-</details>
-
-<details>
-<summary><strong>Server-Side PDF Generation</strong></summary>
-
-PDFs render on the server via `@react-pdf/renderer` and stream back as binary. No client-side PDF libraries, no browser print hacks. Works on every device.
-</details>
 
 ---
 

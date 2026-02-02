@@ -136,8 +136,8 @@ test.describe('Invoice Lifecycle', () => {
     // Verify client name is linked
     await expect(page.getByRole('link', { name: clientName })).toBeVisible();
 
-    // Verify status badge
-    await expect(page.getByText('draft')).toBeVisible();
+    // Verify status badge (use locator to avoid matching the status override <option>)
+    await expect(page.locator('.bg-status-draft-bg')).toBeVisible();
 
     // Verify line items table
     await expect(page.getByText('Web Design Services')).toBeVisible();
