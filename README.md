@@ -12,6 +12,8 @@
 
 **Create invoices. Post payments. Run reports. That's it.**
 
+[![Live App](https://img.shields.io/badge/Live_App-acclownting.vercel.app-black?style=for-the-badge&logo=vercel&logoColor=white)](https://acclownting.vercel.app)
+
 <img src="assets/hero-banner.png" alt="acclownting — Invoicing for Humans Who Just Want It to Work" width="800"/>
 
 [Get Started](#quick-start) · [Features](#features) · [Architecture](#architecture) · [Contributing](#contributing)
@@ -22,7 +24,9 @@
 
 ## The Problem
 
-Every invoicing app eventually becomes an ERP. Features creep in. The UI gets buried under dashboards, integrations, automations, and a settings page with 47 tabs. You just wanted to send Sandra an invoice for the clown you hired.
+Invoicing and reporting software should help with invoicing and reporting.
+
+...Not use GenAI to talk to your bank, "optimize your spend", and interrogate you about your day when all you need to do is send some clown an invoice and call it a day.
 
 ## The Solution
 
