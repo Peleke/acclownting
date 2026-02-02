@@ -26,7 +26,7 @@
 
 Invoicing and reporting software should help with invoicing and reporting.
 
-...Not use GenAI to talk to your bank, "optimize your spend", and interrogate you about your day when all you need to do is send some clown an invoice and call it a day.
+...Not use GenAI to talk to your bank, "optimize your spend", and interrogate you about your week when all you need to do is send some clown an invoice and call it a day.
 
 ## The Solution
 
