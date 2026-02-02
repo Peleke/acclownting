@@ -1,0 +1,21 @@
+{
+  "name": "Acclownting",
+  "short_name": "Acclownting",
+  "description": "Simple invoicing for small businesses",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "theme_color": "#2274A5",
+  "background_color": "#FAF6F1",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -48,11 +48,11 @@ const config: Config = {
         },
         // Semantic status colors
         status: {
-          draft: { bg: '#F4F4F5', text: '#52525B', dot: '#A1A1AA' },
-          sent: { bg: '#DBEAFE', text: '#1D4ED8', dot: '#3B82F6' },
-          partial: { bg: '#FEF3C7', text: '#92400E', dot: '#F59E0B' },
+          draft: { bg: '#F5F0EB', text: '#5C4A4C', dot: '#A0898C' },
+          sent: { bg: '#D9EBF5', text: '#1A5F84', dot: '#2274A5' },
+          partial: { bg: '#FDF6D8', text: '#7A5A0A', dot: '#E6AF2E' },
           paid: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E' },
-          overdue: { bg: '#FFE4E9', text: '#9F1239', dot: '#DF2F4A' },
+          overdue: { bg: '#F5D6D8', text: '#632B30', dot: '#8B3D42' },
         },
       },
       fontFamily: {

@@ -143,55 +143,73 @@ export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormPr
       <div>
         <h3 className="text-[13px] font-medium text-muted-foreground mb-3">Line Items</h3>
         <div className="rounded-xl border border-border overflow-hidden">
-          {/* Header */}
-          <div className="grid grid-cols-[1fr_5rem_7rem_6rem_2.5rem] gap-0 bg-muted border-b border-border/50 px-3 py-2">
+          {/* Desktop Header */}
+          <div className="hidden md:grid grid-cols-[1fr_5rem_7rem_6rem_2.5rem] gap-0 bg-muted border-b border-border/50 px-3 py-2">
             <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Description</span>
             <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider text-right">Qty</span>
             <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider text-right">Price</span>
             <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider text-right">Total</span>
             <span></span>
           </div>
-          {/* Rows */}
+          {/* Rows — single set of inputs, responsive layout via CSS */}
           {lineItems.map((item, i) => (
-            <div key={i} className={`grid grid-cols-[1fr_5rem_7rem_6rem_2.5rem] gap-0 items-center px-3 py-2 ${i !== lineItems.length - 1 ? 'border-b border-border/30' : ''}`}>
-              <input
-                value={item.description}
-                onChange={(e) => updateLineItem(i, 'description', e.target.value)}
-                className="bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none w-full pr-2"
-                placeholder="Item description"
-                required
-              />
-              <input
-                type="number"
-                min="1"
-                step="1"
-                value={item.quantity}
-                onChange={(e) => updateLineItem(i, 'quantity', parseFloat(e.target.value) || 0)}
-                className="bg-transparent text-sm text-foreground/80 text-right tabular-nums focus:outline-none w-full"
-                required
-              />
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={item.unit_price}
-                onChange={(e) => updateLineItem(i, 'unit_price', parseFloat(e.target.value) || 0)}
-                className="bg-transparent text-sm text-foreground/80 text-right tabular-nums focus:outline-none w-full"
-                required
-              />
-              <div className="text-sm text-foreground/80 text-right tabular-nums font-medium">
-                {formatCurrency(item.total)}
+            <div key={i} className={`px-3 md:px-3 py-2 md:py-2 ${i !== lineItems.length - 1 ? 'border-b border-border/30' : ''}`}>
+              {/* Mobile item header */}
+              <div className="flex items-center justify-between md:hidden mb-2">
+                <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Item {i + 1}</span>
               </div>
-              <button
-                type="button"
-                onClick={() => removeLineItem(i)}
-                className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 ml-auto"
-                disabled={lineItems.length === 1}
-              >
-                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M1 1l12 12M13 1L1 13" />
-                </svg>
-              </button>
+              {/* Desktop: grid row / Mobile: stacked */}
+              <div className="grid grid-cols-1 md:grid-cols-[1fr_5rem_7rem_6rem_2.5rem] gap-2 md:gap-0 items-center">
+                <input
+                  value={item.description}
+                  onChange={(e) => updateLineItem(i, 'description', e.target.value)}
+                  className="bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none w-full pr-2 border-b border-border/30 pb-1 md:border-0 md:pb-0"
+                  placeholder="Item description"
+                  required
+                />
+                <div className="grid grid-cols-3 md:contents gap-3">
+                  <div className="md:contents">
+                    <label className="text-[11px] text-muted-foreground uppercase tracking-wider md:hidden">Qty</label>
+                    <input
+                      type="number"
+                      min="1"
+                      step="1"
+                      value={item.quantity}
+                      onChange={(e) => updateLineItem(i, 'quantity', parseFloat(e.target.value) || 0)}
+                      className="bg-transparent text-sm text-foreground/80 md:text-right tabular-nums focus:outline-none w-full"
+                      required
+                    />
+                  </div>
+                  <div className="md:contents">
+                    <label className="text-[11px] text-muted-foreground uppercase tracking-wider md:hidden">Price</label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={item.unit_price}
+                      onChange={(e) => updateLineItem(i, 'unit_price', parseFloat(e.target.value) || 0)}
+                      className="bg-transparent text-sm text-foreground/80 md:text-right tabular-nums focus:outline-none w-full"
+                      required
+                    />
+                  </div>
+                  <div className="md:contents">
+                    <label className="text-[11px] text-muted-foreground uppercase tracking-wider md:hidden">Total</label>
+                    <div className="text-sm text-foreground/80 md:text-right tabular-nums font-medium">
+                      {formatCurrency(item.total)}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeLineItem(i)}
+                  className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 ml-auto"
+                  disabled={lineItems.length === 1}
+                >
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <path d="M1 1l12 12M13 1L1 13" />
+                  </svg>
+                </button>
+              </div>
             </div>
           ))}
         </div>

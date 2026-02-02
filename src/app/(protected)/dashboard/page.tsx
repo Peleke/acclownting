@@ -72,6 +72,10 @@ export default async function DashboardPage() {
           </tbody>
         </table>
       </div>
+      <h2 className="text-sm font-semibold text-foreground mb-3 mt-10">Recent Activity</h2>
+      <div className="bg-card rounded-xl border border-border shadow-card p-8 text-center">
+        <p className="text-sm text-muted-foreground italic">Coming soon...</p>
+      </div>
     </div>
   );
 }

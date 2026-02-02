@@ -33,10 +33,10 @@ test.describe('New Invoice Page', () => {
 
   test('has line item inputs (controlled, no name attributes)', async ({ page }) => {
     await page.goto('/invoices/new');
-    // Line items use controlled inputs - find by label text
-    await expect(page.getByText('Description')).toBeVisible();
-    await expect(page.getByText('Qty')).toBeVisible();
-    await expect(page.getByText('Price')).toBeVisible();
+    // Line items use controlled inputs - find by header text (desktop)
+    await expect(page.getByText('Description').first()).toBeVisible();
+    await expect(page.getByText('Qty').first()).toBeVisible();
+    await expect(page.getByText('Price').first()).toBeVisible();
   });
 
   test('can add line items', async ({ page }) => {
