@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+e2e
+test-results
+showcase-artifacts
+.env*
+!.env.local.example
