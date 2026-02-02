@@ -44,7 +44,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-xl font-semibold text-foreground tracking-tight">
@@ -58,7 +58,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
             </Link>
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {invoice.status === 'draft' && (
             <MarkAsSentButton invoiceId={invoice.id} />
           )}
