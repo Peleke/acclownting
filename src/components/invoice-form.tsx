@@ -201,8 +201,8 @@ export function InvoiceForm({ clients, defaultClientId, invoice }: InvoiceFormPr
                     <label className="text-[11px] text-muted-foreground uppercase tracking-wider md:hidden">Qty</label>
                     <input
                       type="number"
-                      min="1"
-                      step="1"
+                      min="0"
+                      step="any"
                       value={lineItemStrings[i]?.quantity ?? ''}
                       onChange={(e) => updateLineItemString(i, 'quantity', e.target.value)}
                       className="bg-transparent text-sm text-foreground/80 md:text-right tabular-nums focus:outline-none w-full"
