@@ -31,32 +31,32 @@ Every invoicing app eventually becomes an ERP. Features creep in. The UI gets bu
 - Create client records
 - Create invoices with line items, tax, and notes
 - Generate printable PDF invoices
-- Post payments against invoices (partial or full)
-- Run reports: what each client owes, what you've earned, who's overdue
-- Role-based access with admin invites and self-service signup
+- Post partial or full payments against invoices
+- Run reports showing what each client owes and what you've earned
+- Manage access with admin invites and self-service signup
 
-That's the whole product. On purpose.
+That's the entire product, and it will stay that way.
 
 ---
 
 ## Features
 
 ### Client Management
-Create and search clients by name. Each client has a detail page showing contact info, invoice history, and full payment history. One click to create a new invoice pre-filled for that client.
+Create and search clients by name. Each client has a detail page showing contact info, invoice history, and full payment history. One click creates a new invoice pre-filled for that client.
 
 ### Invoicing
-Create invoices with multiple line items, configurable tax rates, and optional notes. Edit invoices after creation. Override status manually when life doesn't follow the happy path. Download or print PDF invoices that look professional enough to send to actual humans.
+Create invoices with multiple line items, configurable tax rates, and optional notes. Edit them after creation. Override status manually when life doesn't follow the happy path. Download or print PDF invoices that look professional enough to send to actual humans.
 
 ### Payments & Status Tracking
-Post partial or full payments against any invoice. Invoices automatically transition through `draft > sent > partial > paid` as payments come in. Past-due invoices get flagged as `overdue` automatically. Delete payments if you made a mistake — the balance recalculates.
+Post partial or full payments against any invoice. Invoices automatically transition through `draft > sent > partial > paid` as payments come in. Past-due invoices get flagged as `overdue` automatically. Deleting a payment recalculates the balance.
 
 ### Reporting
 Two reports, both useful:
-- **Revenue Report** — total earned and owed for any date range (defaults to current month)
-- **Client Balances** — what each client owes, with overdue clients flagged in red
+- **Revenue Report**: total earned and owed for any date range, defaulting to the current month
+- **Client Balances**: per-client breakdown of invoiced, paid, and outstanding amounts, with overdue clients flagged in red
 
 ### Multi-User Auth
-Admin users invite new members. Self-service signup available. Session-based auth via Supabase with cookie management. Role-based access control (admin vs. member).
+Admin users invite new members. Self-service signup is also available. Session-based auth runs through Supabase with cookie management, and role-based access control separates admin from member capabilities.
 
 ---
 
@@ -238,15 +238,13 @@ npx vitest run && npx playwright test
 
 ## License
 
-MIT License — see [LICENSE](./LICENSE) for details.
+MIT License. See [LICENSE](./LICENSE) for details.
 
 ---
 
 <div align="center">
 
-**Invoicing software doesn't need to be complicated.**
-
-**acclownting is proof.**
+**Invoicing software doesn't need to be complicated. acclownting keeps it that way.**
 
 [Back to top](#acclownting)
 
