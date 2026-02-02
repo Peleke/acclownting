@@ -29,7 +29,7 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
       ref={dialogRef}
       onClose={onClose}
       className={cn(
-        'rounded-2xl shadow-modal p-0 w-full max-w-lg border border-border animate-scale-in backdrop:bg-transparent',
+        'rounded-2xl shadow-modal p-0 w-full max-w-lg border border-border bg-card text-card-foreground animate-scale-in backdrop:bg-transparent',
         className
       )}
     >
